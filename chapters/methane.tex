@@ -1,0 +1,50 @@
+\chapter{Methane combustion simulation with Julia} \label{ch:methane}
+
+Julia is still relatively new with a 9-year history as of 2021. Despite the recent development of Julia's ecosystem, its application in combustion modelling remains to be explored. In order to examine the its capability, we start from simple combustion simulation of methane before modelling real physical networks. It is also important to test the correctness of Julia's packages by comparing results from other programming languages.
+
+\section{One-step mechanism}
+
+The one-step reaction mechanism of methane combustion is described in section~\ref{sec:methane_mechanism}. The package ModelingToolkit.jl is used in combination with DifferentialEquations.jl to define the ordinary differential equations of the mathematical model. \textcite{methane_python} adopted the forward Euler scheme with Python to simulate the reaction. The same parameters and initial conditions are kept the same which are summarized in Table~\ref{tab:one-step}.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l l l} 
+ \hline
+ Parameters and inputs & \multicolumn{2}{l}{Values} \\
+ \hline
+ Activation energy $E$ & \multicolumn{2}{l}{$2 \times 10^4$} \\
+ Temperature exponent $\beta$ & \multicolumn{2}{l}{0.0} \\
+ Pre-exponential factor $A$ & \multicolumn{2}{l}{$1.1 \times 10^{10}$} \\
+ Reaction exponents & $n_{\ce{CH4}}$ & 1.0 \\
+ & $n_{\ce{O2}}$ & 0.5 \\
+ Start time $t_0$ & \multicolumn{2}{l}{0.0} \\
+ End time $t_n$ & \multicolumn{2}{l}{$2 \times 10^{-8}$} \\
+ Constant temperature $T$ & \multicolumn{2}{l}{1000} \\
+ Initial values & $[\ce{CH4}]$ & 1.0 \\
+ & $[\ce{O2}]$ & 2.0 \\
+ & $[\ce{CO2}]$ & 0.0 \\
+ & $[\ce{H2O}]$ & 0.0 \\
+ \hline
+\end{tabular}
+\caption{Parameters and inputs for the one-step reaction mechanism of methane combustion}
+\label{tab:one-step}
+\end{table}
+
+The Julia implementation can be found in 
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/one_step_mechanism_methane.pdf}
+        \caption{Julia}
+        \label{fig:one-step-julia}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/one-step-python.png}
+        \caption{Python \parencite{methane_python}}
+        \label{fig:one-step-python}
+    \end{subfigure}
+    \caption{One-step mechanism of methane combustion}\label{fig:animals}
+\end{figure}

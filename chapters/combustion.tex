@@ -1,0 +1,126 @@
+\chapter{Combustion} \label{ch:combustion}
+
+Combustion of gaseous fuels is the combined process of the mixing of fuel (methane) and oxidizer (oxygen) with transport of chemical species in a flow. To simulate combustion, we model the chemical reactions aiming at a sufficiently accurate description of the formation of major and minor species during the chemical reactions. The computational domain that represents the furnace is subdivided into subdomains (containers, vessels or reactors). The dimension of the subdomain is large compared to the typical dimension of a cell required to resolve the flow. These subdomains are interconnected by the flow on mass leaving one reactor and entering the other reactor. The furnace is represented as a chemical reaction network. A chemical reactor network consists of nodes and edges. The nodes and edges represent chemical reactors (subdomains) and interconnecting pipes, respectively. As for chemical reaction, we will consider the combustion of methane and ambient air at atmospheric pressure and constant volume. To alleviate computational cost, the representation of the flow is simplified. 
+
+\section{Basic mechanism of methane combustion} \label{sec:methane_mechanism}
+
+The natural gas we consider here is a fuel primarily consisting of methane (\ce{CH4}). When one methane molecule meets two oxygen molecules with sufficient heat, they start to react and then one molecule of carbon dioxide and two molecules of water are formed.
+
+\begin{equation}
+    \ce{CH4 + 2 O2 -> CO2 + 2 H2O}.
+\end{equation}
+
+The rate of reaction is governed by the formulas
+
+\begin{subequations}
+\begin{align}
+    \frac{\mathrm d [\ce{CH4}]}{\mathrm d t} &= - k \cdot r , \\
+    \frac{\mathrm d [\ce{O2}]}{\mathrm d t} &= - 2k \cdot r , \\
+    \frac{\mathrm d [\ce{CO2}]}{\mathrm d t} &= k \cdot r , \\
+    \frac{\mathrm d [\ce{H2O}]}{\mathrm d t} &= 2k \cdot r ,
+\end{align}
+\end{subequations}
+\begin{gather}
+    k = A T^\beta \exp(- E_a / R T) , \\
+    r = [\ce{CH4}]^{n_{\ce{CH4}}} [\ce{O2}]^{n_{\ce{O2}}} , 
+\end{gather}
+where $[ \, \cdot \,]$ means the concentration of a species, $k$ is the rate coefficient, $E_a$ is the activation energy, $R$ is the gas constant, $T$ is temperature and $\beta$ is the temperature exponent.  This relation is also known as the Arrhenius law, in which the reaction rate depends on the temperature through the Arrhenius equation and the pressure through the influence of pressure on molecular space density which affects the species concentrations. 
+
+Depending on the level of detail of the mechanism, the reaction of methane and oxygen may produce carbon dioxide and water in a single step. The reaction can also be expressed in two steps. See subsection~\ref{subsec: CO} for more details. 
+
+\section{Pollutants}
+
+Some products of combustion are harmful to the health of humans and other living beings and cause damage to the climate. The minor species, namely pollutants, of conventional combustion systems include \ce{CO}, \ce{UHC}, \ce{NO_x}, \ce{SO_x}. For the research to be conducted, \ce{CO} and \ce{NO_x} are relevant pollutants and are thus considered in the following.
+
+\subsection{Carbon monoxide} \label{subsec: CO}
+
+Carbon monoxide (\ce{CO}) is a colorless, odorless atmospheric pollutant mainly from the exhaust of incomplete combustion of fuels. Large CO pollution events can be observed from space over cities \parencite{COemmision}. Breathing air with high concentration of \ce{CO} leads to a reduced oxygen (\ce{O2}) transport in the blood stream to critical organs such as heart and brain \parencite{COpollution}.
+
+The 2S\_CH4\_BFER scheme by \textcite{FRANZELLI2012621} accounts for six species (\ce{CH4}, \ce{O2}, \ce{N2}, \ce{CO}, \ce{CO2}, \ce{H2O}) and the following two reactions:
+\begin{subequations} \label{re:CO}
+\begin{align}
+    \ce{CH4 + 1.5 O2 &-> CO + 2 H2O} \label{re:CO1} \\
+    \ce{CO + 0.5 O2 &<=> CO2} , \label{re:CO2}
+\end{align}
+\end{subequations}
+where the forward reaction rate for reactions \eqref{re:CO} are
+\begin{subequations}
+\begin{align}
+    k_1 &= A_1 T^{\beta_1} \exp(-E_{a,1} / RT) [\ce{CH4}]^{n_{\ce{CH4}}} [\ce{O2}]^{n_{\ce{O2},1}} , \\
+    k_2 &= A_2 T^{\beta_2} \exp(-E_{a,2} / RT) [\ce{CO}]^{n_{\ce{CO}}} [\ce{O2}]^{n_{\ce{O2},2}}.
+\end{align}
+\end{subequations}
+
+The reaction parameters are summarized in Table~\ref{tab:CO_k} \parencite{FRANZELLI2012621}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| l l c l c |} 
+ \hline
+ Parameters & \multicolumn{2}{l}{\ce{CH4} oxidation \eqref{re:CO1}} & \multicolumn{2}{l|}{\ce{CO}-\ce{CO2} equilibrium \eqref{re:CO2}} \\
+ \hline
+ Activation energy $E_a$ & \multicolumn{2}{l}{$3.55 \times 10^4$} & \multicolumn{2}{l|}{$1.2 \times 10^4$} \\ 
+ Temperature exponent $\beta$ & \multicolumn{2}{l}{0.0} & \multicolumn{2}{l|}{0.8} \\
+ Pre-exponential factor $A$ & \multicolumn{2}{l}{$4.9 \times 10^9$} & \multicolumn{2}{l|}{$2 \times 10^8$} \\
+ Reaction exponents & $n_{\ce{CH4}}$ & 0.50 & $n_{\ce{CO}}$ & 1.00 \\
+  & $n_{\ce{O2},1}$ & 0.65 & $n_{\ce{O2},2}$ & 0.50 \\
+ \hline
+\end{tabular}
+\caption{Reaction parameters for the 2S\_CH4\_BFER mechanism}
+\label{tab:CO_k}
+\end{table}
+
+
+
+Furthermore, \textcite{JONES1988233} presented a four-step mechanism which could be useful for more accurate simulation.
+
+\subsection{Nitrogen oxides}
+
+Oxygen and nitrogen in general do not react at ambient temperatures due to lack of energy. But at high temperatures typically in internal combustion engines, they undergo an endothermic reaction producing various oxides of nitrogen (\ce{NO_x}). 
+
+Nitrogen oxides mainly result in two forms of air pollution. In the presence of sunlight, \ce{NO_x} reacts with volatile organic compounds (VOCs) yielding photochemical smog. People with lung diseases and people who work or exercise outside are particularly susceptible to adverse effects of smog such as damage to lung tissue and reduction in lung function \parencite{NOlung}. Furthermore, \ce{NO_x} generates nitric acid and acid rain by reacting in certain environments.
+
+The primary sources of \ce{NO_x} in combustion processes are dominated by the thermal \ce{NO} formation, also well known as the Zel'dovich mechanism \parencite{NO_Zeldovich}. The reaction mechanism consists of two chain reactions:
+\begin{subequations} \label{re: NO}
+\begin{gather}
+    \ce{O + N2 <=>[$k_1$] NO + N} \label{re: NO_1} \\
+    \ce{N + O2 <=>[$k_2$] NO + O} \label{re: NO_2} 
+\end{gather}
+which can be extended by adding the reaction
+\begin{equation}
+    \ce{N + OH <=>[$k_3$] NO + H}. \label{re: NO_3} 
+\end{equation}
+\end{subequations}
+
+The forward and backward reaction rate constants for reactions \eqref{re: NO} are given in Table~\ref{tab: NO_k} \parencite[p.~171]{NO_k}.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l l l|} 
+ \hline
+ \multirow{2}{*}{Reaction} & Forward reaction rate & Backward reaction rate \\
+ & coefficients ($\mathrm m^3$/(kmol)(s)) & coefficients ($\mathrm m^3$/(kmol)(s)) \\
+ \hline
+ \ref{re: NO_1} & $k_{1f} = 1.8 \times 10^{11} \exp(-38370/T)$ & $k_{1b} = 3.8 \times 10^{10} \exp(-425/T)$ \\ 
+ \ref{re: NO_2} & $k_{2f} = 1.8 \times 10^7 \exp(-4680/T)$ & $k_{2b} = 3.8 \times 10^6 \exp(-20820/T)$ \\ 
+ \ref{re: NO_3} & $k_{3f} = 7.1 \times 10^{10} \exp(-450/T)$ & $k_{3b} = 1.7 \times 10^{11} \exp(-24560/T)$ \\ 
+ \hline
+\end{tabular}
+\caption{Reaction rates for the extended Zel'dovich mechanism}
+\label{tab: NO_k}
+\end{table}
+
+Note that reaction~\eqref{re: NO_1} has a very high activation energy ($E_a = 38370 R = 38370 \times 8.3145 = 319027 \, \mathrm{kJ/mol}$) by contrast. Reactions~\eqref{re: NO_2} and \eqref{re: NO_3} have been found to be much faster than reaction~\eqref{re: NO_1}. If simulation timescale is sufficiently long, one can assume that \ce{N2}, \ce{O2}, \ce{O} and \ce{OH} concentrations are at equilibrium and \ce{N} atoms are in steady state, which simplifies the calculation of the \ce{NO} formation. The reverse reaction can be further neglected by assuming that the \ce{NO} concentration is much less than its equilibrium value. So the rate expression is:
+\begin{subequations}
+\begin{align}
+    \frac{\mathrm d [\ce{NO}]}{\mathrm d t} &= k_{1f} [\ce{O}] [\ce{N2}] + k_{2f} [\ce{N}] [\ce{O2}] + k_{3f} [\ce{N}] [\ce{OH}] \\
+    \frac{\mathrm d [\ce{N}]}{\mathrm d t} &= k_{1f} [\ce{O}] [\ce{N2}] - k_{2f} [\ce{N}] [\ce{O2}] - k_{3f} [\ce{N}] [\ce{OH}] = 0 \\
+    \implies \quad \frac{\mathrm d [\ce{NO}]}{\mathrm d t} &= 2 k_{1f} [\ce{O}] [\ce{N2}]
+\end{align}
+\end{subequations}
+
+\section{Chemical reaction network}
+
+Computer-based simulation techniques are commonly used by gas turbine manufacturers in the field of new combustor designs. To describe pollutant formation accurately, around $10^2$ species and $10^3$ reactions must be considered besides the simplest fuels. Currently, it is too computationally expensive to include all phenomena of importance in a single accurate computational fluid dynamics (CFD) simulation for a combustion system. For the sake of compensating detailed chemistry, the chemical reaction network (CRN) approach has been developed with the cost of reduced treatment of fluid dynamics \parencite{CRN}. A trend can be seen that emission simulation may move from the high-budget CFD approaches to CRN approaches where a network of idealized chemical reactors simplifies the computation for combustion modelling \parencite{CRN_review}.
+
+The CRN modelling approach is used for modelling combustion processes. The inner combustor space is divided into several regions. The deviation of physical and chemical properties is relatively small such that each region can be modelled a node with detailed chemistry in the chemical reaction network. The physical flow of substances is captured by edges connecting nodes.
