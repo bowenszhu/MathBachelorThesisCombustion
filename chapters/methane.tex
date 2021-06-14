@@ -4,7 +4,7 @@ Julia is still relatively new with a 9-year history as of 2021. Despite the rece
 
 \section{One-step mechanism}
 
-The one-step reaction mechanism of methane combustion is described in section~\ref{sec:methane_mechanism}. The package ModelingToolkit.jl is used in combination with DifferentialEquations.jl to define the ordinary differential equations of the mathematical model. \textcite{methane_python} adopted the forward Euler scheme with Python to simulate the reaction. The same parameters and initial conditions are kept the same which are summarized in table~\ref{tab:one-step}. The Julia implementation can be found in listing~\ref{lst:one-step} on page~\pageref{lst:one-step}. The results shown in figure~\ref{fig:one-step} are the same which indeed demonstrate the basic functions of DifferentialEquations.jl and ModelingToolkit.jl.
+The one-step reaction mechanism of methane combustion is described in section~\ref{sec:methane_mechanism}. The package ModelingToolkit.jl is used in combination with DifferentialEquations.jl to define the ordinary differential equations of the mathematical model. \textcite{methane_python} adopted the forward Euler scheme with Python to simulate the reaction. The same parameters and initial conditions are kept the same which are summarized in table~\ref{tab:one-step}. The Julia implementation can be found in appendix~\ref{app:one-step} on page~\pageref{app:one-step}. The results shown in figure~\ref{fig:one-step} are the same which indeed demonstrate the basic functions of DifferentialEquations.jl and ModelingToolkit.jl.
 
 \begin{table}[ht!]
 \centering
@@ -41,7 +41,7 @@ The one-step reaction mechanism of methane combustion is described in section~\r
       %(or a blank line to force the subfigure onto a new line)
     \begin{subfigure}[b]{0.48\textwidth}
         \includegraphics[width=\textwidth]{images/one-step-python.png}
-        \caption{Python \parencite{methane_python}}
+        \caption{Python \parencite[p.~26]{methane_python}}
         \label{fig:one-step-python}
     \end{subfigure}
     \caption{One-step mechanism of methane combustion}\label{fig:one-step}
@@ -49,4 +49,51 @@ The one-step reaction mechanism of methane combustion is described in section~\r
 
 \section{Two-step mechanism}
 
-The combustion of methane is actually a sequence of elementary reactions rather than the straightforward one-step mechanism. The 2S\_CH4\_BFER scheme by \textcite{FRANZELLI2012621} considered in this section is explained in subsection~\ref{subsec:CO}.
+The combustion of methane is actually a sequence of elementary reactions rather than the straightforward one-step mechanism. The 2S\_CH4\_BFER scheme by \textcite{FRANZELLI2012621} considered in this section is explained in subsection~\ref{subsec:CO}. We would like to find an approximation solution to the following model for $0 < t < 10^{-7}$.
+\begin{subequations}
+\begin{align}
+    \frac{\mathrm d [\ce{CH4}]}{\mathrm d t} &= - k_1 , \\
+    \frac{\mathrm d [\ce{O2}]}{\mathrm d t} &= - 1.5k_1 - 0.5k_2 , \\
+    \frac{\mathrm d [\ce{CO}]}{\mathrm d t} &= k_1 - k_2 , \\
+    \frac{\mathrm d [\ce{CO2}]}{\mathrm d t} &= k_2 , \\
+    \frac{\mathrm d [\ce{H2O}]}{\mathrm d t} &= 2k_1 .
+\end{align}
+\end{subequations}
+
+The same parameters in table~\ref{tab:CO_k} on page~\pageref{tab:CO_k} are applied. We begin from the simulation with the initial conditions in table~\ref{tab:two-step-inputs} to compare the solutions with the existing Python implementation. 
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l c} 
+ \hline
+ Species & Initial values \\
+ \hline
+ \ce{CH4} & 1.0 \\
+ \ce{O2} & 2.0 \\
+ \ce{CO} & 0.0 \\
+ \ce{CO2} & 0.0 \\
+ \ce{H2O} & 0.0 \\
+ \hline
+\end{tabular}
+\caption{Inputs for the two-step reaction mechanism of methane combustion}
+\label{tab:two-step-inputs}
+\end{table}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.38\textwidth}
+        \includegraphics[width=\textwidth]{images/two_step_mechanism_methane.pdf}
+        \caption{Julia}
+        \label{fig:two-step-julia}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.58\textwidth}
+        \includegraphics[width=\textwidth]{images/two-step-python.png}
+        \caption{Python \parencite[p.~28]{methane_python}}
+        \label{fig:two-step-python}
+    \end{subfigure}
+    \caption{Two-step mechanism of methane combustion}\label{fig:two-step}
+\end{figure}
+
+The results in figure~\ref{fig:two-step} look the same for both implementations except the small fluctuation in Python's figure~\ref{fig:two-step-python} due to the numerical methods it adopted. Note that while we are investigating pollutant formation, it seems that the carbon monoxide (\ce{CO}) is not produced at all. This is because the amount of oxygen (\ce{O2}) provided for the reaction is sufficient. 

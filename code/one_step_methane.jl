@@ -11,7 +11,7 @@ T = 1e3            # temperature in Kelvin
 D = Differential(t)
 
 u₀ = [CH₄ => 1.0,  # initial value CH₄
-      O₂ => 2.0,   # initial value O₂
+      O₂  => 2.0,  # initial value O₂
       CO₂ => 0.0,  # initial value CO₂
       H₂O => 0.0]  # initial value H₂O
 
@@ -24,14 +24,15 @@ p = [k => A * T^β * exp(-E / R / T), # rate coefficient
 
 @named fol_separate = ODESystem([ r ~ CH₄^n_CH₄ * O₂^n_O₂,
                                   D(CH₄) ~ -k * r,
-                                  D(O₂) ~ -2k * r,
+                                  D(O₂)  ~ -2k * r,
                                   D(CO₂) ~ k * r,
                                   D(H₂O) ~ 2k * r ])
 
 prob = ODEProblem(structural_simplify(fol_separate), u₀, tspan, p)
 sol = solve(prob)
 plot(sol, 
+     linewidth=2,
      title="One-step mechanism of methane combustion", 
      xlabel="time [s]", 
      ylabel="concentration [mol/L]")
-savefig("plots/one_step_mechanism_methane.pdf")
+savefig("res/one_step_mechanism_methane.pdf")

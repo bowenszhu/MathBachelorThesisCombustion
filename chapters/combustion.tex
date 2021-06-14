@@ -14,17 +14,17 @@ The rate of reaction is governed by the formulas
 
 \begin{subequations}
 \begin{align}
-    \frac{\mathrm d [\ce{CH4}]}{\mathrm d t} &= - k \cdot r , \\
-    \frac{\mathrm d [\ce{O2}]}{\mathrm d t} &= - 2k \cdot r , \\
-    \frac{\mathrm d [\ce{CO2}]}{\mathrm d t} &= k \cdot r , \\
-    \frac{\mathrm d [\ce{H2O}]}{\mathrm d t} &= 2k \cdot r ,
+    \frac{\mathrm d [\ce{CH4}]}{\mathrm d t} &= - k , \\
+    \frac{\mathrm d [\ce{O2}]}{\mathrm d t} &= - 2k , \\
+    \frac{\mathrm d [\ce{CO2}]}{\mathrm d t} &= k , \\
+    \frac{\mathrm d [\ce{H2O}]}{\mathrm d t} &= 2k ,
 \end{align}
 \end{subequations}
 \begin{gather}
-    k = A T^\beta \exp(- E_a / R T) , \\
-    r = [\ce{CH4}]^{n_{\ce{CH4}}} [\ce{O2}]^{n_{\ce{O2}}} , 
+    k = A T^\beta \exp(- E_a / R T) , \\ 
+    r = [\ce{CH4}]^{n_{\ce{CH4}}} [\ce{O2}]^{n_{\ce{O2}}},
 \end{gather}
-where $[ \, \cdot \,]$ means the concentration of a species, $k$ is the rate coefficient, $E_a$ is the activation energy, $R$ is the gas constant, $T$ is temperature and $\beta$ is the temperature exponent.  This relation is also known as the Arrhenius law, in which the reaction rate depends on the temperature through the Arrhenius equation and the pressure through the influence of pressure on molecular space density which affects the species concentrations. 
+where $[ \, \cdot \,]$ means the concentration of a species, $k$ is the rate coefficients, $E_a$ is the activation energy, $R$ is the gas constant, $T$ is temperature and $\beta$ is the temperature exponent.  This relation is also known as the Arrhenius law, in which the reaction rate depends on the temperature through the Arrhenius equation and the pressure through the influence of pressure on molecular space density which affects the species concentrations. 
 
 Depending on the level of detail of the mechanism, the reaction of methane and oxygen may produce carbon dioxide and water in a single step. The reaction can also be expressed in two steps. See subsection~\ref{subsec:CO} for more details. 
 
@@ -81,18 +81,18 @@ Oxygen and nitrogen in general do not react at ambient temperatures due to lack 
 Nitrogen oxides mainly result in two forms of air pollution. In the presence of sunlight, \ce{NO_x} reacts with volatile organic compounds (VOCs) yielding photochemical smog. People with lung diseases and people who work or exercise outside are particularly susceptible to adverse effects of smog such as damage to lung tissue and reduction in lung function \parencite{NOlung}. Furthermore, \ce{NO_x} generates nitric acid and acid rain by reacting in certain environments.
 
 The primary sources of \ce{NO_x} in combustion processes are dominated by the thermal \ce{NO} formation, also well known as the Zel'dovich mechanism \parencite{NO_Zeldovich}. The reaction mechanism consists of two chain reactions:
-\begin{subequations} \label{re: NO}
+\begin{subequations} \label{re:NO}
 \begin{gather}
-    \ce{O + N2 <=>[$k_1$] NO + N} \label{re: NO_1} \\
-    \ce{N + O2 <=>[$k_2$] NO + O} \label{re: NO_2} 
+    \ce{O + N2 <=>[$k_1$] NO + N} \label{re:NO_1} \\
+    \ce{N + O2 <=>[$k_2$] NO + O} \label{re:NO_2} 
 \end{gather}
 which can be extended by adding the reaction
 \begin{equation}
-    \ce{N + OH <=>[$k_3$] NO + H}. \label{re: NO_3} 
+    \ce{N + OH <=>[$k_3$] NO + H}. \label{re:NO_3} 
 \end{equation}
 \end{subequations}
 
-The forward and backward reaction rate constants for reactions \eqref{re: NO} are given in table~\ref{tab: NO_k} \parencite[p.~171]{NO_k}.
+The forward and backward reaction rate constants for reactions \eqref{re:NO} are given in table~\ref{tab:NO_k} \parencite[p.~171]{NO_k}.
 
 \begin{table}[ht!]
 \centering
@@ -101,16 +101,16 @@ The forward and backward reaction rate constants for reactions \eqref{re: NO} ar
  \multirow{2}{*}{Reaction} & Forward reaction rate & Backward reaction rate \\
  & coefficients ($\mathrm m^3$/(kmol)(s)) & coefficients ($\mathrm m^3$/(kmol)(s)) \\
  \hline
- \ref{re: NO_1} & $k_{1f} = 1.8 \times 10^{11} \exp(-38370/T)$ & $k_{1b} = 3.8 \times 10^{10} \exp(-425/T)$ \\ 
- \ref{re: NO_2} & $k_{2f} = 1.8 \times 10^7 \exp(-4680/T)$ & $k_{2b} = 3.8 \times 10^6 \exp(-20820/T)$ \\ 
- \ref{re: NO_3} & $k_{3f} = 7.1 \times 10^{10} \exp(-450/T)$ & $k_{3b} = 1.7 \times 10^{11} \exp(-24560/T)$ \\ 
+ \ref{re:NO_1} & $k_{1f} = 1.8 \times 10^{11} \exp(-38370/T)$ & $k_{1b} = 3.8 \times 10^{10} \exp(-425/T)$ \\ 
+ \ref{re:NO_2} & $k_{2f} = 1.8 \times 10^7 \exp(-4680/T)$ & $k_{2b} = 3.8 \times 10^6 \exp(-20820/T)$ \\ 
+ \ref{re:NO_3} & $k_{3f} = 7.1 \times 10^{10} \exp(-450/T)$ & $k_{3b} = 1.7 \times 10^{11} \exp(-24560/T)$ \\ 
  \hline
 \end{tabular}
 \caption{Reaction rates for the extended Zel'dovich mechanism}
-\label{tab: NO_k}
+\label{tab:NO_k}
 \end{table}
 
-Note that reaction~\eqref{re: NO_1} has a very high activation energy ($E_a = 38370 R = 38370 \times 8.3145 = 319027 \, \mathrm{kJ/mol}$) by contrast. Reactions~\eqref{re: NO_2} and \eqref{re: NO_3} have been found to be much faster than reaction~\eqref{re: NO_1}. If simulation timescale is sufficiently long, one can assume that \ce{N2}, \ce{O2}, \ce{O} and \ce{OH} concentrations are at equilibrium and \ce{N} atoms are in steady state, which simplifies the calculation of the \ce{NO} formation. The reverse reaction can be further neglected by assuming that the \ce{NO} concentration is much less than its equilibrium value. So the rate expression is:
+Note that reaction~\eqref{re:NO_1} has a very high activation energy ($E_a = 38370 R = 38370 \times 8.3145 = 319027 \, \mathrm{kJ/mol}$) by contrast. Reactions~\eqref{re:NO_2} and \eqref{re:NO_3} have been found to be much faster than reaction~\eqref{re:NO_1}. If simulation timescale is sufficiently long, one can assume that \ce{N2}, \ce{O2}, \ce{O} and \ce{OH} concentrations are at equilibrium and \ce{N} atoms are in steady state, which simplifies the calculation of the \ce{NO} formation. The reverse reaction can be further neglected by assuming that the \ce{NO} concentration is much less than its equilibrium value. So the rate expression is:
 \begin{subequations}
 \begin{align}
     \frac{\mathrm d [\ce{NO}]}{\mathrm d t} &= k_{1f} [\ce{O}] [\ce{N2}] + k_{2f} [\ce{N}] [\ce{O2}] + k_{3f} [\ce{N}] [\ce{OH}] \\

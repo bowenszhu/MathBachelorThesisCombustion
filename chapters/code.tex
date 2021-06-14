@@ -4,32 +4,25 @@
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
+\setminted{
+    % frame=lines,
+    % framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=LightGray,
+    fontsize=\footnotesize,
+    linenos
+}
+
 \chapter{Julia implementation}
 
-Listing~\ref{lst:project.toml} shows the project dependencies. The Julia language and the packages in other versions are not tested.
+The project dependencies are shown below.
 
-\begin{listing}[ht]
-\inputminted[
-    frame=lines,
-    framesep=2mm,
-    baselinestretch=1.2,
-    bgcolor=LightGray,
-    fontsize=\footnotesize,
-    linenos
-]{bash}{code/Project.toml}
-\caption{Project dependencies}
-\label{lst:project.toml}
-\end{listing}
+\inputminted{bash}{code/Project.toml}
 
-\begin{listing}[ht]
-\inputminted[
-    frame=lines,
-    framesep=2mm,
-    baselinestretch=1.2,
-    bgcolor=LightGray,
-    fontsize=\footnotesize,
-    linenos
-]{julia}{code/one_step_methane.jl}
-\caption{One-step reaction mechanism of methane combustion}
-\label{lst:one-step}
-\end{listing}
+\section{One-step mechanism of methane combustion} \label{app:one-step}
+
+\inputminted{julia}{code/one_step_methane.jl}
+
+\section{Two-step mechanism of methane combustion} \label{app:two-step}
+
+\inputminted{julia}{code/two_step_methane.jl}
