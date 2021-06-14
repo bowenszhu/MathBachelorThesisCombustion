@@ -4,7 +4,7 @@ Julia is still relatively new with a 9-year history as of 2021. Despite the rece
 
 \section{One-step mechanism}
 
-The one-step reaction mechanism of methane combustion is described in section~\ref{sec:methane_mechanism}. The package ModelingToolkit.jl is used in combination with DifferentialEquations.jl to define the ordinary differential equations of the mathematical model. \textcite{methane_python} adopted the forward Euler scheme with Python to simulate the reaction. The same parameters and initial conditions are kept the same which are summarized in Table~\ref{tab:one-step}.
+The one-step reaction mechanism of methane combustion is described in section~\ref{sec:methane_mechanism}. The package ModelingToolkit.jl is used in combination with DifferentialEquations.jl to define the ordinary differential equations of the mathematical model. \textcite{methane_python} adopted the forward Euler scheme with Python to simulate the reaction. The same parameters and initial conditions are kept the same which are summarized in table~\ref{tab:one-step}. The Julia implementation can be found in listing~\ref{lst:one-step} on page~\pageref{lst:one-step}. The results shown in figure~\ref{fig:one-step} are the same which indeed demonstrate the basic functions of DifferentialEquations.jl and ModelingToolkit.jl.
 
 \begin{table}[ht!]
 \centering
@@ -30,8 +30,6 @@ The one-step reaction mechanism of methane combustion is described in section~\r
 \label{tab:one-step}
 \end{table}
 
-The Julia implementation can be found in 
-
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
@@ -46,5 +44,9 @@ The Julia implementation can be found in
         \caption{Python \parencite{methane_python}}
         \label{fig:one-step-python}
     \end{subfigure}
-    \caption{One-step mechanism of methane combustion}\label{fig:animals}
+    \caption{One-step mechanism of methane combustion}\label{fig:one-step}
 \end{figure}
+
+\section{Two-step mechanism}
+
+The combustion of methane is actually a sequence of elementary reactions rather than the straightforward one-step mechanism. The 2S\_CH4\_BFER scheme by \textcite{FRANZELLI2012621} considered in this section is explained in subsection~\ref{subsec:CO}.
