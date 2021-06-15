@@ -34,7 +34,11 @@
 \usepackage[T1]{fontenc}
 \usepackage{xcolor}
 \usepackage[version=4,arrows=pgf]{mhchem}
-\usepackage[backend=biber,style=apa]{biblatex}
+\usepackage[
+    backend=biber,
+    style=apa
+    % style=authoryear
+]{biblatex}
 \addbibresource{reference.bib}
 \usepackage{hyperref}
 \usepackage{multirow}
@@ -48,10 +52,7 @@
 \usepackage{minted}
 \usepackage{fontspec}
 % \setmonofont{FreeMono}
-\setmonofont{JuliaMono-Regular}[
-    Path      = fonts/,
-    Extension = .ttf
-]
+
 \pagestyle{plain}
 
 %% This bit allows you to either specify only the files which you wish to
@@ -78,6 +79,8 @@
 \include{chapters/combustion}
 \include{chapters/julia}
 \include{chapters/methane}
+\include{chapters/network}
+\include{chapters/conclusion}
 
 \include{chapters/biblio}
 
