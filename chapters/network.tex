@@ -1,14 +1,49 @@
 \chapter{Chemical reaction network with Julia} \label{ch:network}
 
-{\large \color{red} TODO}
+This chapter presents solving reaction networks with Julia. It starts from the formal problem definition. Examples of the application on 5-node 5-edge networks are illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
 
-\section{Problem definition}
+\section{Mathematical model}
 
-\section{Examples}
+As briefly introduced in section~\ref{sec:CRN}, an internal combustor space is modelled as a network of graph $G$ with $n$ vertices $V$ and $\frac{n(n-1)}{2}$ edges $E$. A vertex $v$ is a container with chemical reactions perfectly stirred which only involve chemistry. An edge $e$ is a pipe serving as a channel for flowing species with prescribed velocity which captures transport.
 
-\subsection{5-node 5-edge network with main flux and~recirculation}
+Each vertex $v_i$ contains $s$ chemical species. Edge $e_{i,j}$ connects vertex $v_i$ and vertex $v_j$. $\mathbf u(t)$ is a vector of unknown species concentration.
 
-\subsection{5-node 5-edge network with main flux and by-pass}
+\begin{align}
+    \mathbf u(t) &= 
+    \begin{pmatrix}
+        \mathbf u_1(t) \\
+        \vdots \\
+        \mathbf u_i(t) \\
+        \vdots \\
+        \mathbf u_n(t)
+    \end{pmatrix} \\
+    \mathbf u_i(t) &=
+    \begin{pmatrix}
+        u_{i,1}(t) \\
+        \vdots \\
+        u_{i,j}(t) \\
+        \vdots \\
+        u_{i,s}(t)
+    \end{pmatrix}
+\end{align}
+where $\mathbf u_i(t)$ is a subvector corresponding to vertex $v_i$ and $u_{i,j}$ denotes the concentration of the $j$-th species in vertex $v_i$.
+
+The dynamics of the entire system is modelled by a set of ordinary differential equations (ODEs)
+\begin{equation}
+    \frac{\mathrm d \mathbf u (t)}{\mathrm d t} = \mathbf F ( \mathbf u (t), t) =  \mathbf F_{\mathrm{chemistry}} ( \mathbf u (t), t) + \mathbf F_{\mathrm{transport}} ( \mathbf u (t), t)
+\end{equation}
+with prescribed initial conditions
+\begin{equation}
+    \mathbf u(t = 0) = \mathbf u_0.
+\end{equation}
+
+The aim is to solve the large-scale ODE system with sufficient accuracy for a certain time range. The differential equations are stiff as it involves fast chemistry and slow transport, for which we will apply implicit time integration methods with variable time steps.
+
+\section{Application on 5-node 5-edge networks}
+
+\subsection{Main flux and~recirculation}
+
+\subsection{Main flux and by-pass}
 
 \section{Jacobian matrix}
 
