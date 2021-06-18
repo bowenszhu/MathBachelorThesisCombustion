@@ -1,6 +1,6 @@
 \chapter{Chemical reaction network with Julia} \label{ch:network}
 
-This chapter presents solving reaction networks with Julia. It starts from the formal problem definition. Examples of the application on 5-node 5-edge networks are illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
+This chapter presents solving reaction networks with Julia. It starts from the formal problem definition. Examples of 5-node 5-edge networks are illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
 
 \section{Mathematical model}
 
@@ -39,11 +39,117 @@ with prescribed initial conditions
 
 The aim is to solve the large-scale ODE system with sufficient accuracy for a certain time range. The differential equations are stiff as it involves fast chemistry and slow transport, for which we will apply implicit time integration methods with variable time steps.
 
-\section{Application on 5-node 5-edge networks}
+\section{5-node 5-edge networks}
 
-\subsection{Main flux and~recirculation}
+In this section, we apply Julia to solve networks consisting of 5 nodes and 5 edges in two different connectivity configurations. Each vertex in the graph is a node with the one-step reaction mechanism~\eqref{re:one-step} of methane combustion as its internal chemistry. The ODE system is defined as follows, $\forall i \in \{1,2,3,4,5\}$,
+\begin{equation}
+    \frac{\mathrm d \mathbf u_i(t)}{\mathrm d t} = \frac{\mathrm d}{\mathrm d t}
+    \begin{pmatrix}
+        u_{i,1} \\
+        u_{i,2} \\
+        u_{i,3} \\
+        u_{i,4}
+    \end{pmatrix}
+    % = \frac{\mathrm d}{\mathrm d t}
+    % \begin{pmatrix}
+    %     [\ce{CH4}]_i \\
+    %     [\ce{O2}]_i \\
+    %     [\ce{CO2}]_i \\
+    %     [\ce{H2O}]_i
+    % \end{pmatrix}
+    % = k [\ce{CH4}]_i^{n_{\ce{CH4}}} [\ce{O2}]_i^{n_{\ce{O2}}}
+    % \begin{pmatrix}
+    %     -1 \\
+    %     -2 \\
+    %     1 \\
+    %     2
+    % \end{pmatrix}
+    = k u_{i,1}^{n_{\ce{CH4}}} u_{i,2}^{n_{\ce{O2}}}
+    \begin{pmatrix}
+        -1 \\
+        -2 \\
+        1 \\
+        2
+    \end{pmatrix}
+    + \sigma \sum_{j=1}^5 G_{ji} (\mathbf u_j - \mathbf u_i)
+\end{equation}
+where $u_{i,1}$, $u_{i,2}$, $u_{i,3}$, $u_{i,4}$ denote the concentration of \ce{CH4}, \ce{O2}, \ce{CO2} and \ce{H2O} in the $i$-th vertex respectively. The rate coefficient $k = A T^\beta \exp(- E_a / R T)$, the reaction orders $n_{\ce{CH4}}$ and $n_{\ce{O2}}$ are the same with the values in table~\ref{tab:one-step} on page~\pageref{tab:one-step}. The graph structure and the flow rate are captured by the parameters $\sigma$ and $G_{ji}$.
+
+{\large \color{red} initial conditions}
+
+\subsection{Main flux and recirculation}
+
+We firstly consider the network shown in figure~\ref{fig:recirculation}. The vertices 1, 2, 3, 4 reside in the same line. The vertex 5, the edges 4 and 5 creates a cycle of circulation.
+
+\begin{figure}[ht!]
+    \centering
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
+squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+node distance=2.5cm,
+auto,
+>=latex'
+]
+\Large
+%Nodes
+\node[roundnode] (n5) {5};
+\node[roundnode] (n2) [above left =of n5] {2};
+\node[roundnode] (n3) [above right=of n5] {3};
+\node[roundnode] (n1) [       left=of n2] {1};
+\node[roundnode] (n4) [      right=of n3] {4};
+
+%Lines
+\path[thick,-Straight Barb] (n1) edge node {1} (n2);
+\path[thick,-Straight Barb] (n2) edge node {2} (n3);
+\path[thick,-Straight Barb] (n3) edge node {3} (n4);
+\path[thick,-Straight Barb,red] (n3) edge node {4} (n5);
+\path[thick,-Straight Barb,red] (n5) edge node {5} (n2);
+\end{tikzpicture}
+\caption{5-node 5-edge network with main flux and recirculation}
+\label{fig:recirculation}
+\end{figure}
+
+The adjacency matrix is
+\begin{equation}
+    G = \bordermatrix{
+        ~ & 1 & 2 & 3 & 4 & 5 \cr
+        1 & 0 & 1 & 0 & 0 & 0 \cr
+        2 & 0 & 0 & 1 & 0 & 0 \cr
+        3 & 0 & 0 & 0 & 1 & 1 \cr
+        4 & 0 & 0 & 0 & 0 & 0 \cr
+        5 & 0 & 1 & 0 & 0 & 0 \cr}
+\end{equation}
+where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{j,i}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise. 
 
 \subsection{Main flux and by-pass}
+
+\begin{figure}[ht!]
+    \centering
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
+squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+node distance=2.5cm,
+auto,
+>=latex'
+]
+\Large
+%Nodes
+\node[roundnode] (n5) {5};
+\node[roundnode] (n2) [above left =of n5] {2};
+\node[roundnode] (n3) [above right=of n5] {3};
+\node[roundnode] (n1) [       left=of n2] {1};
+\node[roundnode] (n4) [      right=of n3] {4};
+
+%Lines
+\path[thick,-Straight Barb] (n1) edge node {1} (n2);
+\path[thick,-Straight Barb] (n2) edge node {2} (n3);
+\path[thick,-Straight Barb] (n3) edge node {3} (n4);
+\path[thick,-Straight Barb,red] (n2) edge node {4} (n5);
+\path[thick,-Straight Barb,red] (n5) edge node {5} (n3);
+\end{tikzpicture}
+\caption{5-node 5-edge network with main flux and by-pass}
+\label{fig:by-pass}
+\end{figure}
 
 \section{Jacobian matrix}
 

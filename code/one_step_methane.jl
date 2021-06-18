@@ -35,4 +35,4 @@ plot(sol,
      title="One-step mechanism of methane combustion", 
      xlabel="time [s]", 
      ylabel="concentration [mol/L]")
-savefig("res/one_step_mechanism_methane.pdf")
+savefig("res/one_step_mechanism_methane.svg")

@@ -6,7 +6,7 @@ Combustion of gaseous fuels is the combined process of the mixing of fuel (metha
 
 The natural gas we consider here is a fuel primarily consisting of methane (\ce{CH4}). When one methane molecule meets two oxygen molecules with sufficient heat, they start to react and then one molecule of carbon dioxide and two molecules of water are formed.
 
-\begin{equation}
+\begin{equation} \label{re:one-step}
     \ce{CH4 + 2 O2 -> CO2 + 2 H2O}.
 \end{equation}
 
@@ -14,16 +14,17 @@ The rate of reaction is governed by the formulas
 
 \begin{subequations}
 \begin{align}
-    \frac{\mathrm d [\ce{CH4}]}{\mathrm d t} &= - k , \\
-    \frac{\mathrm d [\ce{O2}]}{\mathrm d t} &= - 2k , \\
-    \frac{\mathrm d [\ce{CO2}]}{\mathrm d t} &= k , \\
-    \frac{\mathrm d [\ce{H2O}]}{\mathrm d t} &= 2k ,
+    \frac{\mathrm d [\ce{CH4}]}{\mathrm d t} &= - k \cdot r, \\
+    \frac{\mathrm d [\ce{O2}]}{\mathrm d t} &= - 2k \cdot r, \\
+    \frac{\mathrm d [\ce{CO2}]}{\mathrm d t} &= k \cdot r, \\
+    \frac{\mathrm d [\ce{H2O}]}{\mathrm d t} &= 2k \cdot r,
 \end{align}
 \end{subequations}
-\begin{equation}
-    k = A T^\beta \exp(- E_a / R T) [\ce{CH4}]^{n_{\ce{CH4}}} [\ce{O2}]^{n_{\ce{O2}}}, 
-\end{equation}
-where $[ \, \cdot \,]$ means the concentration of a species, $k$ is the rate coefficients, $E_a$ is the activation energy, $R$ is the gas constant, $T$ is temperature and $\beta$ is the temperature exponent.  This relation is also known as the Arrhenius law, in which the reaction rate depends on the temperature through the Arrhenius equation and the pressure through the influence of pressure on molecular space density which affects the species concentrations. 
+\begin{gather}
+    k = A T^\beta \exp(- E_a / R T), \\
+    r = [\ce{CH4}]^{n_{\ce{CH4}}} [\ce{O2}]^{n_{\ce{O2}}}, 
+\end{gather}
+where $[ \, \cdot \,]$ means the concentration of a species, $k$ is the rate coefficients, $E_a$ is the activation energy, $R$ is the gas constant, $T$ is temperature, $\beta$ is the temperature exponent and $n$ is reaction order of a species.  This relation is also known as the Arrhenius law, in which the reaction rate depends on the temperature through the Arrhenius equation and the pressure through the influence of pressure on molecular space density which affects the species concentrations. 
 
 Depending on the level of detail of the mechanism, the reaction of methane and oxygen may produce carbon dioxide and water in a single step. The reaction can also be expressed in two steps. See subsection~\ref{subsec:CO} for more details. 
 

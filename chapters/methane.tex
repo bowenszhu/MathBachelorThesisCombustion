@@ -12,7 +12,7 @@ The one-step reaction mechanism of methane combustion is described in section~\r
  \hline
  Parameters and inputs & \multicolumn{2}{l}{Values} \\
  \hline
- Activation energy $E$ & \multicolumn{2}{l}{$2 \times 10^4$} \\
+ Activation energy $E_a$ & \multicolumn{2}{l}{$2 \times 10^4$} \\
  Temperature exponent $\beta$ & \multicolumn{2}{l}{0.0} \\
  Pre-exponential factor $A$ & \multicolumn{2}{l}{$1.1 \times 10^{10}$} \\
  Reaction exponents & $n_{\ce{CH4}}$ & 1.0 \\
@@ -33,7 +33,7 @@ The one-step reaction mechanism of methane combustion is described in section~\r
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=\textwidth]{images/one_step_mechanism_methane.pdf}
+        \includesvg[width=\textwidth]{images/one_step_mechanism_methane}
         \caption{Julia}
         \label{fig:one-step-julia}
     \end{subfigure}
@@ -82,7 +82,7 @@ The same parameters in table~\ref{tab:CO_k} on page~\pageref{tab:CO_k} are appli
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.38\textwidth}
-        \includegraphics[width=\textwidth]{images/two_step_mechanism_methane.pdf}
+        \includesvg[width=\textwidth]{images/two_step_mechanism_methane}
         \caption{Julia}
         \label{fig:two-step-julia}
     \end{subfigure}
