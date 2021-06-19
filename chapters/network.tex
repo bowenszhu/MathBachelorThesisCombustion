@@ -235,8 +235,6 @@ The adjacency matrix in this case becomes
 
 \section{Jacobian matrix}
 
-Solving stiff ordinary differential equations generally requires very small step size for numerical stability. It is crucial to improve performance and avoid inefficiency when dealing with large problems. According to the Julia package DifferentialEquations.jl, Jacobian is built at each iteration when implicit differential equation solver is used which is computationally expensive. The efficiency can be optimized by manually declaring  of Jacobian functions to reduce the Jacobian construction cost. In this way, we provide extra information about the ODE system to the solver. On the other hand, one can exploit the sparsity pattern of Jacobian. For example, the Jacobian for the 5-node-5-edge network with main flux and recirculation is
-
 \tikzset{offset definition/.style={
         above left offset={-0.1,0.35},
         below right offset={0.1,-0.1},
@@ -258,30 +256,31 @@ Solving stiff ordinary differential equations generally requires very small step
     }
 }
 
+Solving stiff ordinary differential equations generally requires very small step size for numerical stability. It is crucial to improve performance and avoid inefficiency when dealing with large problems. According to the Julia package DifferentialEquations.jl, Jacobian is built at each iteration when implicit differential equation solver is used which is computationally expensive. The efficiency can be optimized by manually declaring  of Jacobian functions to reduce the Jacobian construction cost. In this way, we provide extra information about the ODE system to the solver. On the other hand, one can exploit the sparsity pattern of Jacobian. For example, the sparsity structure of the Jacobian for the 5-node-5-edge network with main flux and recirculation is
 \begin{equation}
 \scalebox{0.76}{
     \bordermatrix{
         ~ & 11 & 12 & 13 & 14 & 21 & 22 & 23 & 24 & 31 & 32 & 33 & 34 & 41 & 42 & 43 & 44 & 51 & 52 & 53 & 54 \cr
-        11 & \tikzmarkin[node]{n1} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e1>} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        12 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        13 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        14 & 0 & 0 & 0 & 0 \tikzmarkend{n1} & 0 & 0 & 0 & 0 \tikzmarkend{e1>} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        21 & \tikzmarkin[back]{e1<} 0 & 0 & 0 & 0 & \tikzmarkin[node]{n2} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e2>} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e5<} 0 & 0 & 0 & 0 \cr
-        22 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        23 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        24 & 0 & 0 & 0 & 0 \tikzmarkend{e1<} & 0 & 0 & 0 & 0 \tikzmarkend{n2} & 0 & 0 & 0 & 0 \tikzmarkend{e2>} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e5<} \cr
-        31 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e2<} 0 & 0 & 0 & 0 & \tikzmarkin[node]{n3} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e3>} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e4>} 0 & 0 & 0 & 0 \cr
-        32 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        33 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        34 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e2<} & 0 & 0 & 0 & 0 \tikzmarkend{n3} & 0 & 0 & 0 & 0 \tikzmarkend{e3>} & 0 & 0 & 0 & 0 \tikzmarkend{e4>} \cr
-        41 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e3<} 0 & 0 & 0 & 0 & \tikzmarkin[node]{n4} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        42 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        43 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        44 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e3<} & 0 & 0 & 0 & 0 \tikzmarkend{n4} & 0 & 0 & 0 & 0 \cr
-        51 & 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e5>} 0 & 0 & 0 & 0 & \tikzmarkin[back]{e4<} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[node]{n5} 0 & 0 & 0 & 0 \cr
-        52 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        53 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
-        54 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e5>} & 0 & 0 & 0 & 0 \tikzmarkend{e4<} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{n5} \cr}
+        11 & \tikzmarkin[node]{n1} \bullet & \bullet & 0 & 0 & \tikzmarkin[edge]{e1>} \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        12 & \bullet & \bullet & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        13 & \bullet & \bullet & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        14 & \bullet & \bullet & 0 & 0 \tikzmarkend{n1} & 0 & 0 & 0 & \bullet \tikzmarkend{e1>} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        21 & \tikzmarkin[back]{e1<} \bullet & 0 & 0 & 0 & \tikzmarkin[node]{n2} \bullet & \bullet & 0 & 0 & \tikzmarkin[edge]{e2>} \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e5<} \bullet & 0 & 0 & 0 \cr
+        22 & 0 & \bullet & 0 & 0 & \bullet & \bullet & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & 0 \cr
+        23 & 0 & 0 & \bullet & 0 & \bullet & \bullet & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 \cr
+        24 & 0 & 0 & 0 & \bullet \tikzmarkend{e1<} & \bullet & \bullet & 0 & 0 \tikzmarkend{n2} & 0 & 0 & 0 & \bullet \tikzmarkend{e2>} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet \tikzmarkend{e5<} \cr
+        31 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e2<} \bullet & 0 & 0 & 0 & \tikzmarkin[node]{n3} \bullet & \bullet & 0 & 0 & \tikzmarkin[edge]{e3>} \bullet & 0 & 0 & 0 & \tikzmarkin[edge]{e4>} \bullet & 0 & 0 & 0 \cr
+        32 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & \bullet & \bullet & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & \bullet & 0 & 0 \cr
+        33 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & \bullet & \bullet & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & \bullet & 0 \cr
+        34 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet \tikzmarkend{e2<} & \bullet & \bullet & 0 & 0 \tikzmarkend{n3} & 0 & 0 & 0 & \bullet \tikzmarkend{e3>} & 0 & 0 & 0 & \bullet \tikzmarkend{e4>} \cr
+        41 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e3<} \bullet & 0 & 0 & 0 & \tikzmarkin[node]{n4} \bullet & \bullet & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        42 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & \bullet & \bullet & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        43 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & \bullet & \bullet & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        44 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet \tikzmarkend{e3<} & \bullet & \bullet & 0 & 0 \tikzmarkend{n4} & 0 & 0 & 0 & 0 \cr
+        51 & 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e5>} \bullet & 0 & 0 & 0 & \tikzmarkin[back]{e4<} \bullet & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[node]{n5} \bullet & \bullet & 0 & 0 \cr
+        52 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & \bullet & 0 & 0 \cr
+        53 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & \bullet & 0 & 0 & 0 & 0 & 0 & \bullet & \bullet & 0 & 0 \cr
+        54 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \bullet \tikzmarkend{e5>} & 0 & 0 & 0 & \bullet \tikzmarkend{e4<} & 0 & 0 & 0 & 0 & \bullet & \bullet & 0 & 0 \tikzmarkend{n5} \cr}
 }
 \end{equation}
 
