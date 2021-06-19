@@ -21,7 +21,7 @@ g_weighted = SimpleWeightedDiGraph(G - G')
 edge_weights = getfield.(collect(edges(g_weighted)), :weight)
 g_directed = SimpleDiGraph(g_weighted)
 
-@inline Base.@propagate_inbounds function vertex!(du, u, edges, p, t)
+@inline Base.@propagate_inbounds function chemistry!(du, u, edges, p, t)
     if u[1] < 0.
         u[1] = 0.
     end
@@ -57,7 +57,7 @@ end
     nothing
 end
 
-node = ODEVertex(f! = vertex!, dim = 4, sym=[:CH₄, :_O₂, :CO₂, :H₂O])
+node = ODEVertex(f! = chemistry!, dim = 4, sym=[:CH₄, :_O₂, :CO₂, :H₂O])
 edge = StaticEdge(f! = transport!, dim = 4, coupling = :directed)
 network! = network_dynamics(node, edge, g_directed)
 
