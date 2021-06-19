@@ -21,7 +21,7 @@ g_weighted = SimpleWeightedDiGraph(G - G')
 edge_weights = getfield.(collect(edges(g_weighted)), :weight)
 g_directed = SimpleDiGraph(g_weighted)
 
-@inline Base.@propagate_inbounds function methane_vertex!(du, u, edges, p, t)
+@inline Base.@propagate_inbounds function vertex!(du, u, edges, p, t)
     if u[1] < 0.
         u[1] = 0.
     end
@@ -57,8 +57,7 @@ end
     nothing
 end
 
-node = ODEVertex(f! = methane_vertex!, dim = 4, 
-                 sym=[:CH₄, :_O₂, :CO₂, :H₂O])
+node = ODEVertex(f! = vertex!, dim = 4, sym=[:CH₄, :_O₂, :CO₂, :H₂O])
 edge = StaticEdge(f! = transport!, dim = 4, coupling = :directed)
 network! = network_dynamics(node, edge, g_directed)
 
@@ -71,28 +70,33 @@ tspan = (0.,      # start time t₀
 prob = ODEProblem(network!, u₀, tspan, p)
 sol = solve(prob, Rodas5(autodiff=false))
 
-plot(sol, linewidth = 1, ylims = (0., 2.), titlefont = 11,
+plot(sol, linewidth = 1, titlefont = 11,
+     xlims = (0., 2.1e-8), ylims = (0., 2.),
      title = "5-node 5-edge network with main flux and recirculation", 
      ylabel = "concentration [mol/L]",
      xlabel = "time [s]")
 savefig("res/recirculation.svg")
 
-for node in 1:5
-    plot(sol, linewidth = 2, ylims = (0., 2.), titlefont = 11,
-         vars = syms_containing(network!, string(node)),
-         title = "node $(node) in 5-node 5-edge network with main flux and recirculation", 
+for n in 1:5
+    plot(sol, linewidth = 2,
+         titlefont = 11, legendfont = 12,
+         xlims = (0., 2.1e-8), ylims = (0., 1.),
+         vars = syms_containing(network!, string(n)),
+         title = "node $(n) in 5-node 5-edge network "
+               * "with main flux and recirculation", 
          ylabel = "concentration [mol/L]",
          xlabel = "time [s]")
-    savefig("res/recirculation$(node).svg")
+    savefig("res/recirculation$(n).svg")
 end
 
-for species in ["CH₄", "_O₂", "CO₂", "H₂O"]
-    plot(sol, linewidth = 2, ylims = (0., 2.), titlefont = 11,
-         vars = idx_containing(network!, species),
-         title = "$(species) in 5-node 5-edge network with main flux and recirculation", 
+for s in ["CH₄", "_O₂", "CO₂", "H₂O"]
+    plot(sol, linewidth = 2,
+         titlefont = 11, legendfont = 12,
+         xlims = (0., 2.1e-8), ylims = (0., 1.),
+         vars = idx_containing(network!, s),
+         title = "$(s) in 5-node 5-edge network "
+               * "with main flux and recirculation", 
          ylabel = "concentration [mol/L]",
          xlabel = "time [s]")
-    savefig("res/recirculation$(species).svg")
+    savefig("res/recirculation$(s).svg")
 end
-
-

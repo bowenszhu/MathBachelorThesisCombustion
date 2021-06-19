@@ -30,9 +30,8 @@ p = [k => A * T^β * exp(-E / R / T), # rate coefficient
 
 prob = ODEProblem(structural_simplify(fol_separate), u₀, tspan, p)
 sol = solve(prob)
-plot(sol, 
-     linewidth=2,
-     title="One-step mechanism of methane combustion", 
-     xlabel="time [s]", 
-     ylabel="concentration [mol/L]")
+plot(sol, linewidth = 2, xlims = (0., 2.1e-8),
+     title = "One-step mechanism of methane combustion", 
+     xlabel = "time [s]", 
+     ylabel = "concentration [mol/L]")
 savefig("res/one_step_mechanism_methane.svg")

@@ -39,8 +39,7 @@ p = [k₁ => A₁ * T^β₁ * exp(-E₁ / R / T), # rate coefficient 1
 
 prob = ODEProblem(structural_simplify(fol_separate), u₀, tspan, p)
 sol = solve(prob)
-plot(sol, 
-     linewidth=2,
+plot(sol, linewidth = 2, xlims = (0., 1.04e-7),
      title="Two-step mechanism of methane combustion", 
      xlabel="time [s]", 
      ylabel="concentration [mol/L]")

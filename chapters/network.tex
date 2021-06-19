@@ -105,7 +105,7 @@ auto,
 \path[thick,-Straight Barb,red] (n3) edge node {4} (n5);
 \path[thick,-Straight Barb,red] (n5) edge node {5} (n2);
 \end{tikzpicture}
-\caption{5-node 5-edge network with main flux and recirculation}
+\caption{Graph of 5-node 5-edge network with main flux and recirculation}
 \label{fig:recirculation}
 \end{figure}
 
@@ -119,7 +119,76 @@ The adjacency matrix is
         4 & 0 & 0 & 0 & 0 & 0 \cr
         5 & 0 & 1 & 0 & 0 & 0 \cr}
 \end{equation}
-where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{j,i}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise. 
+where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{j,i}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise.
+
+\begin{figure}[ht]
+    \centering
+    \includesvg[width=\textwidth]{images/recirculation/recirculation}
+    \caption{5-node 5-edge network with main flux and recirculation}
+    \label{fig:recirculation_}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation1}
+        \caption{Node 1}
+        \label{fig:recirculation1}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation2}
+        \caption{Node 2}
+        \label{fig:recirculation2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation3}
+        \caption{Node 3}
+        \label{fig:recirculation3}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation4}
+        \caption{Node 4}
+        \label{fig:recirculation4}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation5}
+        \caption{Node 5}
+        \label{fig:recirculation5}
+    \end{subfigure}
+    \caption{Nodes in 5-node 5-edge network with main flux and recirculation}\label{fig:recirculation_nodes}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculationCH4}
+        \caption{\ce{CH4}}
+        \label{fig:recirculationCH4}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation_O2}
+        \caption{\ce{O2}}
+        \label{fig:recirculationO2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculationCO2}
+        \caption{\ce{CO2}}
+        \label{fig:recirculationCO2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculationH2O}
+        \caption{\ce{H2O}}
+        \label{fig:recirculationH2O}
+    \end{subfigure}
+    \caption{Species in 5-node 5-edge network with main flux and recirculation}\label{fig:recirculation_species}
+\end{figure}
 
 \subsection{Main flux and by-pass}
 
