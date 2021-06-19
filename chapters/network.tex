@@ -39,7 +39,7 @@ with prescribed initial conditions
 
 The aim is to solve the large-scale ODE system with sufficient accuracy for a certain time range. The differential equations are stiff as it involves fast chemistry and slow transport, for which we will apply implicit time integration methods with variable time steps.
 
-\section{5-node 5-edge networks}
+\section{5-node-5-edge networks}
 
 In this section, we apply Julia to solve networks consisting of 5 nodes and 5 edges in two different connectivity configurations. Each vertex in the graph is a node with the one-step reaction mechanism~\eqref{re:one-step} of methane combustion as its internal chemistry. The ODE system is defined as follows, $\forall i \in \{1,2,3,4,5\}$,
 \begin{equation}
@@ -121,14 +121,14 @@ The adjacency matrix is
 \end{equation}
 where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{j,i}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering
     \includesvg[width=\textwidth]{images/recirculation/recirculation}
     \caption{5-node 5-edge network with main flux and recirculation}
     \label{fig:recirculation_}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \includesvg[width=\textwidth]{images/recirculation/recirculation1}
@@ -162,7 +162,7 @@ where the numbers outside the border of the matrix indicate the indices of verti
     \caption{Nodes in 5-node 5-edge network with main flux and recirculation}\label{fig:recirculation_nodes}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \includesvg[width=\textwidth]{images/recirculation/recirculationCH4}
@@ -192,7 +192,9 @@ where the numbers outside the border of the matrix indicate the indices of verti
 
 \subsection{Main flux and by-pass}
 
-\begin{figure}[ht!]
+Figure~\ref{fig:by-pass} shows the structure of the 5-node-5-edge network with main flux and by-pass. Edges 4 and 5 build a by-pass for edge 2. 
+
+\begin{figure}[htbp]
     \centering
 \begin{tikzpicture}[
 roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
@@ -203,8 +205,8 @@ auto,
 ]
 \Large
 %Nodes
-\node[roundnode] (n5) {5};
-\node[roundnode] (n2) [above left =of n5] {2};
+\node[roundnode] (n5)                     {5};
+\node[roundnode] (n2) [above  left=of n5] {2};
 \node[roundnode] (n3) [above right=of n5] {3};
 \node[roundnode] (n1) [       left=of n2] {1};
 \node[roundnode] (n4) [      right=of n3] {4};
@@ -216,10 +218,72 @@ auto,
 \path[thick,-Straight Barb,red] (n2) edge node {4} (n5);
 \path[thick,-Straight Barb,red] (n5) edge node {5} (n3);
 \end{tikzpicture}
-\caption{5-node 5-edge network with main flux and by-pass}
+\caption{Graph of 5-node 5-edge network with main flux and by-pass}
 \label{fig:by-pass}
 \end{figure}
 
+The adjacency matrix in this case becomes
+\begin{equation}
+    G = \bordermatrix{
+        ~ & 1 & 2 & 3 & 4 & 5 \cr
+        1 & 0 & 1 & 0 & 0 & 0 \cr
+        2 & 0 & 0 & 1 & 0 & 1 \cr
+        3 & 0 & 0 & 0 & 1 & 0 \cr
+        4 & 0 & 0 & 0 & 0 & 0 \cr
+        5 & 0 & 0 & 1 & 0 & 0 \cr}.
+\end{equation}
+
 \section{Jacobian matrix}
+
+Solving stiff ordinary differential equations generally requires very small step size for numerical stability. It is crucial to improve performance and avoid inefficiency when dealing with large problems. According to the Julia package DifferentialEquations.jl, Jacobian is built at each iteration when implicit differential equation solver is used which is computationally expensive. The efficiency can be optimized by manually declaring  of Jacobian functions to reduce the Jacobian construction cost. In this way, we provide extra information about the ODE system to the solver. On the other hand, one can exploit the sparsity pattern of Jacobian. For example, the Jacobian for the 5-node-5-edge network with main flux and recirculation is
+
+\tikzset{offset definition/.style={
+        above left offset={-0.1,0.35},
+        below right offset={0.1,-0.1},
+    },
+    node/.style={
+        offset definition,
+        set fill color=green!50!lime!30,
+        set border color=green!40!black,
+    },
+    edge/.style={
+        offset definition,
+        set fill color=red!10,
+        set border color=red,
+    },
+    back/.style={
+        offset definition,
+        set fill color=blue!10,
+        set border color=blue,
+    }
+}
+
+\begin{equation}
+\scalebox{0.76}{
+    \bordermatrix{
+        ~ & 11 & 12 & 13 & 14 & 21 & 22 & 23 & 24 & 31 & 32 & 33 & 34 & 41 & 42 & 43 & 44 & 51 & 52 & 53 & 54 \cr
+        11 & \tikzmarkin[node]{n1} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e1>} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        12 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        13 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        14 & 0 & 0 & 0 & 0 \tikzmarkend{n1} & 0 & 0 & 0 & 0 \tikzmarkend{e1>} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        21 & \tikzmarkin[back]{e1<} 0 & 0 & 0 & 0 & \tikzmarkin[node]{n2} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e2>} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e5<} 0 & 0 & 0 & 0 \cr
+        22 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        23 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        24 & 0 & 0 & 0 & 0 \tikzmarkend{e1<} & 0 & 0 & 0 & 0 \tikzmarkend{n2} & 0 & 0 & 0 & 0 \tikzmarkend{e2>} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e5<} \cr
+        31 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e2<} 0 & 0 & 0 & 0 & \tikzmarkin[node]{n3} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e3>} 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e4>} 0 & 0 & 0 & 0 \cr
+        32 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        33 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        34 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e2<} & 0 & 0 & 0 & 0 \tikzmarkend{n3} & 0 & 0 & 0 & 0 \tikzmarkend{e3>} & 0 & 0 & 0 & 0 \tikzmarkend{e4>} \cr
+        41 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[back]{e3<} 0 & 0 & 0 & 0 & \tikzmarkin[node]{n4} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        42 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        43 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        44 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e3<} & 0 & 0 & 0 & 0 \tikzmarkend{n4} & 0 & 0 & 0 & 0 \cr
+        51 & 0 & 0 & 0 & 0 & \tikzmarkin[edge]{e5>} 0 & 0 & 0 & 0 & \tikzmarkin[back]{e4<} 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tikzmarkin[node]{n5} 0 & 0 & 0 & 0 \cr
+        52 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        53 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \cr
+        54 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{e5>} & 0 & 0 & 0 & 0 \tikzmarkend{e4<} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \tikzmarkend{n5} \cr}
+}
+\end{equation}
+
 
 \section{Performance}
