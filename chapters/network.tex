@@ -39,7 +39,7 @@ with prescribed initial conditions
 
 The aim is to solve the large-scale ODE system with sufficient accuracy for a certain time range. The differential equations are stiff as it involves fast chemistry and slow transport, for which we will apply implicit time integration methods with variable time steps.
 
-\section{5-node-5-edge networks}
+\section{5-node-5-edge networks} \label{sec:5network}
 
 In this section, we apply Julia to solve networks consisting of 5 nodes and 5 edges in two different connectivity configurations. Each vertex in the graph is a node with the one-step reaction mechanism~\eqref{re:one-step} of methane combustion as its internal chemistry. The ODE system is defined as follows, $\forall i \in \{1,2,3,4,5\}$,
 \begin{equation}
@@ -75,13 +75,13 @@ In this section, we apply Julia to solve networks consisting of 5 nodes and 5 ed
 \end{equation}
 where $u_{i,1}$, $u_{i,2}$, $u_{i,3}$, $u_{i,4}$ denote the concentration of \ce{CH4}, \ce{O2}, \ce{CO2} and \ce{H2O} in the $i$-th vertex respectively. The rate coefficient $k = A T^\beta \exp(- E_a / R T)$, the reaction orders $n_{\ce{CH4}}$ and $n_{\ce{O2}}$ are the same with the values in table~\ref{tab:one-step} on page~\pageref{tab:one-step}. The graph structure and the flow rate are captured by the parameters $\sigma$ and $G_{ji}$.
 
-{\large \color{red} initial conditions}
+Moreover, as for the initial condition, there are fuels in the first node and none in other nodes at the start time. That is, methane is injected into node 1 only at the outset and flow travels downstream to other nodes, which corresponds to the case of a cement kiln furnace in which the fuel is injected in one end of the kiln. This situation is referred to as a single stage combustion process. 
 
 \subsection{Main flux and recirculation}
 
 We firstly consider the network shown in figure~\ref{fig:recirculation}. The vertices 1, 2, 3, 4 reside in the same line. The vertex 5, the edges 4 and 5 creates a cycle of circulation.
 
-\begin{figure}[ht!]
+\begin{figure}[htbp]
     \centering
 \begin{tikzpicture}[
 roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
@@ -119,13 +119,43 @@ The adjacency matrix is
         4 & 0 & 0 & 0 & 0 & 0 \cr
         5 & 0 & 1 & 0 & 0 & 0 \cr}
 \end{equation}
-where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{j,i}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise.
+where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{ji}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise.
+
+Figures~\ref{fig:recirculation_}, \ref{fig:recirculation_species} and \ref{fig:recirculation_nodes} display the evolution of the substances in the network. As we can inspect, the concentration in node 2 is relatively higher than nodes 3, 4, 5 due to the recirculation and the direct downstream stream flow from node 1.
 
 \begin{figure}[htbp]
     \centering
-    \includesvg[width=\textwidth]{images/recirculation/recirculation}
+    \includesvg[width=0.8\textwidth]{images/recirculation/recirculation}
     \caption{5-node 5-edge network with main flux and recirculation}
     \label{fig:recirculation_}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculationCH4}
+        \caption{\ce{CH4}}
+        \label{fig:recirculationCH4}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculation_O2}
+        \caption{\ce{O2}}
+        \label{fig:recirculationO2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculationCO2}
+        \caption{\ce{CO2}}
+        \label{fig:recirculationCO2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/recirculation/recirculationH2O}
+        \caption{\ce{H2O}}
+        \label{fig:recirculationH2O}
+    \end{subfigure}
+    \caption{Species in 5-node 5-edge network with main flux and recirculation}\label{fig:recirculation_species}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -162,37 +192,20 @@ where the numbers outside the border of the matrix indicate the indices of verti
     \caption{Nodes in 5-node 5-edge network with main flux and recirculation}\label{fig:recirculation_nodes}
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includesvg[width=\textwidth]{images/recirculation/recirculationCH4}
-        \caption{\ce{CH4}}
-        \label{fig:recirculationCH4}
-    \end{subfigure}
-    ~
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includesvg[width=\textwidth]{images/recirculation/recirculation_O2}
-        \caption{\ce{O2}}
-        \label{fig:recirculationO2}
-    \end{subfigure}
-    ~
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includesvg[width=\textwidth]{images/recirculation/recirculationCO2}
-        \caption{\ce{CO2}}
-        \label{fig:recirculationCO2}
-    \end{subfigure}
-    ~
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includesvg[width=\textwidth]{images/recirculation/recirculationH2O}
-        \caption{\ce{H2O}}
-        \label{fig:recirculationH2O}
-    \end{subfigure}
-    \caption{Species in 5-node 5-edge network with main flux and recirculation}\label{fig:recirculation_species}
-\end{figure}
+\clearpage
 
 \subsection{Main flux and by-pass}
 
-Figure~\ref{fig:by-pass} shows the structure of the 5-node-5-edge network with main flux and by-pass. Edges 4 and 5 build a by-pass for edge 2. 
+Figure~\ref{fig:by-pass} shows the structure of the 5-node-5-edge network with main flux and by-pass. Edges 4 and 5 build a by-pass for edge 2. The adjacency matrix in this case becomes
+\begin{equation}
+    G = \bordermatrix{
+        ~ & 1 & 2 & 3 & 4 & 5 \cr
+        1 & 0 & 1 & 0 & 0 & 0 \cr
+        2 & 0 & 0 & 1 & 0 & 1 \cr
+        3 & 0 & 0 & 0 & 1 & 0 \cr
+        4 & 0 & 0 & 0 & 0 & 0 \cr
+        5 & 0 & 0 & 1 & 0 & 0 \cr}.
+\end{equation}
 
 \begin{figure}[htbp]
     \centering
@@ -222,16 +235,78 @@ auto,
 \label{fig:by-pass}
 \end{figure}
 
-The adjacency matrix in this case becomes
-\begin{equation}
-    G = \bordermatrix{
-        ~ & 1 & 2 & 3 & 4 & 5 \cr
-        1 & 0 & 1 & 0 & 0 & 0 \cr
-        2 & 0 & 0 & 1 & 0 & 1 \cr
-        3 & 0 & 0 & 0 & 1 & 0 \cr
-        4 & 0 & 0 & 0 & 0 & 0 \cr
-        5 & 0 & 0 & 1 & 0 & 0 \cr}.
-\end{equation}
+The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared with the network of recirculation, the concentration in node 2 is lower in the network with by-pass as there is one more edge originating from node 2 and no flow going back to it. The amount of substances of nodes 3 in the network of by-pass is slightly higher than its counterpart in the network of recirculation.
+
+\begin{figure}[htbp]
+    \centering
+    \includesvg[width=0.8\textwidth]{images/by-pass/by-pass}
+    \caption{5-node 5-edge network with main flux and by-pass}
+    \label{fig:by-pass_}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-passCH4}
+        \caption{\ce{CH4}}
+        \label{fig:by-passCH4}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-pass_O2}
+        \caption{\ce{O2}}
+        \label{fig:by-passO2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-passCO2}
+        \caption{\ce{CO2}}
+        \label{fig:by-passCO2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-passH2O}
+        \caption{\ce{H2O}}
+        \label{fig:by-passH2O}
+    \end{subfigure}
+    \caption{Species in 5-node 5-edge network with main flux and by-pass}\label{fig:by-pass_species}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-pass1}
+        \caption{Node 1}
+        \label{fig:by-pass1}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-pass2}
+        \caption{Node 2}
+        \label{fig:by-pass2}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-pass3}
+        \caption{Node 3}
+        \label{fig:by-pass3}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-pass4}
+        \caption{Node 4}
+        \label{fig:by-pass4}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includesvg[width=\textwidth]{images/by-pass/by-pass5}
+        \caption{Node 5}
+        \label{fig:by-pass5}
+    \end{subfigure}
+    \caption{Nodes in 5-node 5-edge network with main flux and by-pass}\label{fig:by-pass_nodes}
+\end{figure}
+
+\clearpage
 
 \section{Jacobian sparsity}
 
@@ -311,9 +386,184 @@ Solving stiff ordinary differential equations generally requires very small step
 \end{equation}
 where the non-zero elements are shown as black bullets $\bullet$. The green blocks in the diagonal represent the internal chemistry whose reaction rate depends on the concentration of the two reactants \ce{CH4} and \ce{O2} in our mathematical model. The red and blue blocks correspond to the forward and backward directions of edges respectively. 
 
-For large networks, most of the entries in the Jacobian are zero. Therefore, we can make use of special data structures to speed up Jacobian calculation and reduce memory usage. Here, \texttt{SparseArrays} comes into play which 
-
-
-
+For large networks, most of the entries in the Jacobian are zero. Therefore, special data structures could be invoked to speed up Jacobian calculation and reduce memory usage. Here, the \texttt{SparseArrays} stdlib module comes into play which helps save space and execution time for arrays that contain enough zeros compared to dense arrays\footnote{Note that Jacobian sparsity should only be declared if the sparsity if high, for example, 99\% of the matrix elements are zeros, otherwise the overhead of sparse data structures may be higher than the gains.}. 
 
 \section{Performance}
+
+We solved the one- and the two-step reaction mechanism of methane combustion with the default solver algorithm\footnote{Julia DifferentialEquations.jl automatically chooses an efficient method for the input problem.} and applied the 5th order A-stable stiffly stable Rosenbrock method \texttt{Rodas5} to solve the 5-node-5-edge networks. So far only small (<50 ODEs) problems are examined. However, in order to utilize Julia on real combustion simulation, we shall test its capability on solving large reaction networks with more species beforehand.
+
+Besides \texttt{Rodas5}, we consider the second order A-B-L-S-stable one-step ESDIRK method \texttt{TRBDF2} which is suggested by DifferentialEquations.jl documentation for slightly larger problems (with <2000 ODEs). Furthermore, it is possible to optimize the linear solvers for certain differential equation integration methods. We also evaluate the performance of \texttt{TRBDF2} in combination with the GMRES linear solver.
+
+For simplicity, we employ the test network shown in figure~\ref{fig:test-network}. All nodes reside in the same line with a directed edge connecting every pair of consecutive nodes. The internal chemistry in each node is the one-step mechanism of methane combustion. The initial values are gradually decreasing from node 1 to node n, although this does not really affect the execution time. The parameters are kept the same as the 5-node-5-edge networks discussed in section~\ref{sec:5network}.
+
+\begin{figure}[htbp]
+    \centering
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=12mm},
+squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+node distance=2cm,
+auto,
+>=latex'
+]
+%Nodes
+\node[roundnode] (n1)               {1};
+\node[roundnode] (n2) [right=of n1] {2};
+\node            (n3) [right=of n2] {$\cdots \cdots$};
+\node[roundnode] (n4) [right=of n3] {$n-1$};
+\node[roundnode] (n5) [right=of n4] {$n$};
+
+%Lines
+\path[thick,-Straight Barb] (n1) edge node {1} (n2);
+\path[thick,-Straight Barb] (n2) edge node {2} (n3);
+\path[thick,-Straight Barb] (n3) edge node {$n-2$} (n4);
+\path[thick,-Straight Barb] (n4) edge node {$n-1$} (n5);
+\end{tikzpicture}
+\caption{Graph of test network}
+\label{fig:test-network}
+\end{figure}
+ 
+ Figure~\ref{fig:performance} shows the result of execution times and allocated memory. \texttt{TRBDF2} significantly outperforms \texttt{Rodas5} for large problems. The GMRES linear solver further aids in speeding up and reducing memory usage.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Execution times},
+    xlabel={\#nodes},
+    ylabel={Time [s]},
+    xmin=0, xmax=1100,
+    ymin=0, ymax=50,
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+
+\addplot[
+    color=blue,
+    mark=square*,
+]coordinates {
+    (2, 428.329e-6)
+    (4, 682.009e-6)
+    (8, 1.809e-3)
+    (16, 5.946e-3)
+    (32, 75.706e-3)
+    (64, 365.845e-3)
+    (128, 1.770)
+    (256, 3.130)
+    (512, 10.227)
+    (1024, 44.547)
+};
+\addlegendentry{\texttt{Rodas5}}
+
+\addplot[
+    color=red,
+    mark=*,
+]coordinates {
+    (2, 263.047e-6)
+    (4, 405.238e-6)
+    (8, 898.666e-6)
+    (16, 2.584e-3)
+    (32, 20.907e-3)
+    (64, 81.726e-3)
+    (128, 370.682e-3)
+    (256, 1.527)
+    (512, 6.541)
+    (1024, 33.633)
+};
+\addlegendentry{\texttt{TRBDF2}}
+
+\addplot[
+    color=green,
+    mark=triangle*,
+]coordinates {
+    (2, 265.119e-6)
+    (4, 486.505e-6)
+    (8, 913.781e-6)
+    (16, 2.159e-3)
+    (32, 19.462e-3)
+    (64, 65.684e-3)
+    (128, 306.077e-3)
+    (256, 883.604e-3)
+    (512, 2.772)
+    (1024, 10.046)
+};
+\addlegendentry{\texttt{TRBDF2 GMRES}}
+    
+\end{axis}
+\end{tikzpicture}
+        \caption{Execution times}
+        \label{fig:performance-time}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.48\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Memory allocation},
+    xlabel={\#nodes},
+    ylabel={Memory space [GiB]},
+    xmin=0, xmax=1100,
+    ymin=0, ymax=15,
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+
+\addplot[
+    color=blue,
+    mark=square*,
+]coordinates {
+    (2, 206.03/1024/1024)
+    (4, 358.77/1024/1024)
+    (8, 1.00/1024)
+    (16, 3.23/1024)
+    (32, 11.82/1024)
+    (64, 45.12/1024)
+    (128, 176.38/1024)
+    (256, 826.22/1024)
+    (512, 3.52)
+    (1024, 14.67)
+};
+\addlegendentry{\texttt{Rodas5}}
+
+\addplot[
+    color=red,
+    mark=*,
+]coordinates {
+    (2, 107.95/124/1024)
+    (4, 184.31/1024/1024)
+    (8, 451.44/1024/1024)
+    (16, 1.28/1024)
+    (32, 3.46/1024)
+    (64, 12.37/1024)
+    (128, 46.84/1024)
+    (256, 264.10/1024)
+    (512, 1.29)
+    (1024, 6.05)
+};
+\addlegendentry{\texttt{TRBDF2}}
+
+\addplot[
+    color=green,
+    mark=triangle*,
+]coordinates {
+    (2, 101.70/1024/1024)
+    (4, 185.19/1024/1024)
+    (8, 418.39/1024/1024)
+    (16, 1.08/1024)
+    (32, 3.37/1024)
+    (64, 12.19/1024)
+    (128, 46.38/1024)
+    (256, 221.83/1024)
+    (512, 958.52/1024)
+    (1024, 3.87)
+};
+\addlegendentry{\texttt{TRBDF2 GMRES}}
+    
+\end{axis}
+\end{tikzpicture}
+        \caption{Memory allocation}
+        \label{fig:performance-memory}
+    \end{subfigure}
+    \caption{Performance of Julia for solving reaction networks}\label{fig:performance}
+\end{figure}
