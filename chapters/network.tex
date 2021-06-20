@@ -384,7 +384,7 @@ Solving stiff ordinary differential equations generally requires very small step
         54 & & & & & & & & \bullet \tikzmarkend{e5>} & & & & \bullet \tikzmarkend{e4<} & & & & & \bullet & \bullet & & \tikzmarkend{n5} \cr}
 }
 \end{equation}
-where the non-zero elements are shown as black bullets $\bullet$. The green blocks in the diagonal represent the internal chemistry whose reaction rate depends on the concentration of the two reactants \ce{CH4} and \ce{O2} in our mathematical model. The red and blue blocks correspond to the forward and backward directions of edges respectively. 
+where the non-zero elements are shown as black bullets $\bullet$. The {\color{green!40!black} green} blocks in the diagonal represent the internal chemistry whose reaction rate depends on the concentration of the two reactants \ce{CH4} and \ce{O2} in our mathematical model. The {\color{red} red} and {\color{blue} blue} blocks correspond to the forward and backward directions of edges respectively. 
 
 For large networks, most of the entries in the Jacobian are zero. Therefore, special data structures could be invoked to speed up Jacobian calculation and reduce memory usage. Here, the \texttt{SparseArrays} stdlib module comes into play which helps save space and execution time for arrays that contain enough zeros compared to dense arrays\footnote{Note that Jacobian sparsity should only be declared if the sparsity if high, for example, 99\% of the matrix elements are zeros, otherwise the overhead of sparse data structures may be higher than the gains.}. 
 
