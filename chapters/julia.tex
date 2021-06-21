@@ -1,6 +1,6 @@
 \chapter{Julia programming language} \label{ch:julia}
 
-Julia is a high-level, high-performance, dynamic programming language designed by \textcite{julia}. Many of its features are well suited for numerical and scientific computing. It is claimed that Julia can achieve machine performance without sacrificing human convenience, namely the so-called \texttt{Walks like Python, Runs like C}. The recent development of a large number of Julia packages including various mathematical libraries, data manipulation tools and packages for general purpose computing enrich the Julia ecosystem for community use. In our situation, we would like to attempt applying Julia to model pollutant formation using the chemical reaction network approach. The following sections introduce the main relevant packages and how they contribute to this project.
+Julia is a high-level, high-performance, dynamic programming language designed by \textcite{julia}. Many of its features are well suited for numerical and scientific computing. It is claimed that Julia can achieve machine performance without sacrificing human convenience, namely the so-called \texttt{Walks like Python, Runs like C}. The recent development of many Julia packages including various mathematical libraries, data manipulation tools and packages for general purpose computing enrich the Julia ecosystem for community use. In our situation, we would like to attempt applying Julia to model pollutant formation using the chemical reaction network approach. The following sections introduce the main relevant packages and how they contribute to this project.
 
 \section{DifferentialEquations.jl}
 
@@ -8,12 +8,12 @@ DifferentialEquations.jl \parencite{DifferentialEquations.jl} is a suite for num
 
 \section{ModelingToolkit.jl}
 
-ModelingToolkit.jl \parencite{ModelingToolkit.jl} is a modeling language for high-performance symbolic-numeric computation in scientific computing. It allows for users to give a high-level description of a model for symbolic preprocessing to analyze and enhance the model. It is compatible with DifferentialEquations.jl as all the symbolic systems have a direct conversion to a numerical system which can then be handled through the SciML interfaces. ModelingToolkit.jl can be used to symbolicify numerical code and do symbolic calculation. More specifically, it is capable to automatically derive the Jacobian function of an \texttt{ODEProblem}.
+ModelingToolkit.jl \parencite{ModelingToolkit.jl} is a modeling language for high-performance symbolic-numeric computation in scientific computing. It allows for users to give a high-level description of a model for symbolic preprocessing to analyze and enhance the model. It is compatible with DifferentialEquations.jl as all the symbolic systems have a direct conversion to a numerical system which can then be handled through the SciML interfaces. ModelingToolkit.jl can be used to symbolicify numerical code and do symbolic calculation. More particularly, it is capable to automatically derive the Jacobian function of an \texttt{ODEProblem}.
 
 \section{LightGraphs.jl and SimpleWeightedGraphs.jl}
 
-To simulate the reaction network, special tools and data structures are needed to store and process graphs. LightGraphs.jl and SimpleWeightedGraphs.jl \parencite{LightGraphs} offer a set of simple and graph implementations which make it easy for us to define arbitrary complex networks. Besides constructing directed, weighted networks by adjacency matrices, many built-in graph structures are available, such as \texttt{barabasi\_albert} for the Barab\'{a}si–Albert model.
+To simulate the reaction network, special tools and data structures are needed to store and process graphs. LightGraphs.jl and SimpleWeightedGraphs.jl \parencite{LightGraphs} offer a set of simple and graph implementations which make it easy for us to define arbitrary complex networks. Besides constructing directed, weighted networks by adjacency matrices, many built-in graph structures are available, such as the Barab\'{a}si–Albert model.
 
 \section{NetworkDynamics.jl}
 
-\section{ReactionMechanismSimulator.jl}
+NetworkDynamics.jl \parencite{NetworkDynamics.jl} provides an interface between LightGraphs.jl and DifferentialEquations.jl. It allows to define several types of dynamic and static nodes and edges and to link them up in order to create complex network dynamics. In this project, the behavior of a node is the chemical reaction of fuel combustion. The transport phenomena between neighbor nodes is captured by the edges.

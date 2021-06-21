@@ -1,10 +1,10 @@
 \chapter{Chemical reaction network with Julia} \label{ch:network}
 
-This chapter presents solving reaction networks with Julia. It starts from the formal problem definition. Examples of 5-node 5-edge networks are illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
+This chapter presents solving reaction networks with Julia. It starts from the formal mathematical model. Application on 5-node 5-edge networks is illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
 
 \section{Mathematical model}
 
-As briefly introduced in section~\ref{sec:CRN}, an internal combustor space is modelled as a network of graph $G$ with $n$ vertices $V$ and $\frac{n(n-1)}{2}$ edges $E$. A vertex $v$ is a container with chemical reactions perfectly stirred which only involve chemistry. An edge $e$ is a pipe serving as a channel for flowing species with prescribed velocity which captures transport.
+As briefly introduced in section~\ref{sec:CRN}, an internal combustor space is modelled as a network of graph $G$ with $n$ vertices $V$ and some edges $E$. A vertex $v$ is a container with chemical reactions perfectly stirred which only involve chemistry. An edge $e$ is a pipe serving as a channel for flowing species with prescribed velocity which captures transport.
 
 Each vertex $v_i$ contains $s$ chemical species. Edge $e_{i,j}$ connects vertex $v_i$ and vertex $v_j$. $\mathbf u(t)$ is a vector of unknown species concentration.
 
@@ -26,7 +26,7 @@ Each vertex $v_i$ contains $s$ chemical species. Edge $e_{i,j}$ connects vertex 
         u_{i,s}(t)
     \end{pmatrix}
 \end{align}
-where $\mathbf u_i(t)$ is a subvector corresponding to vertex $v_i$ and $u_{i,j}$ denotes the concentration of the $j$-th species in vertex $v_i$.
+where $\mathbf u_i(t)$ is a subvector corresponding to vertex $v_i$. $u_{i,j}$ denotes the concentration of the $j$-th species in vertex $v_i$.
 
 The dynamics of the entire system is modelled by a set of ordinary differential equations (ODEs)
 \begin{equation}
@@ -41,7 +41,7 @@ The aim is to solve the large-scale ODE system with sufficient accuracy for a ce
 
 \section{5-node-5-edge networks} \label{sec:5network}
 
-In this section, we apply Julia to solve networks consisting of 5 nodes and 5 edges in two different connectivity configurations. Each vertex in the graph is a node with the one-step reaction mechanism~\eqref{re:one-step} of methane combustion as its internal chemistry. The ODE system is defined as follows, $\forall i \in \{1,2,3,4,5\}$,
+In this section, we apply Julia to solve networks consisting of 5 nodes and 5 edges in two different connectivity configurations. The code can be found in appendix~\ref{app:5network} on page~\pageref{app:5network}. Each vertex in the graph is a node with the one-step reaction mechanism~\eqref{re:one-step} of methane combustion as its internal chemistry. The ODE system is defined as follows, $\forall i \in \{1,2,3,4,5\}$,
 \begin{equation}
     \frac{\mathrm d \mathbf u_i(t)}{\mathrm d t} = \frac{\mathrm d}{\mathrm d t}
     \begin{pmatrix}
@@ -75,7 +75,7 @@ In this section, we apply Julia to solve networks consisting of 5 nodes and 5 ed
 \end{equation}
 where $u_{i,1}$, $u_{i,2}$, $u_{i,3}$, $u_{i,4}$ denote the concentration of \ce{CH4}, \ce{O2}, \ce{CO2} and \ce{H2O} in the $i$-th vertex respectively. The rate coefficient $k = A T^\beta \exp(- E_a / R T)$, the reaction orders $n_{\ce{CH4}}$ and $n_{\ce{O2}}$ are the same with the values in table~\ref{tab:one-step} on page~\pageref{tab:one-step}. The graph structure and the flow rate are captured by the parameters $\sigma$ and $G_{ji}$.
 
-Moreover, as for the initial condition, there are fuels in the first node and none in other nodes at the start time. That is, methane is injected into node 1 only at the outset and flow travels downstream to other nodes, which corresponds to the case of a cement kiln furnace in which the fuel is injected in one end of the kiln. This situation is referred to as a single stage combustion process. 
+Moreover, as for the initial condition, there are fuels in the first node and none in other nodes at the start time. That is, methane is injected into node 1 only at the outset and flow travels downstream to other nodes. Node~1 acts as an inlet for \ce{CH4}. The initial values of \ce{O2} in nodes 1, 3, 5 are set to zero.
 
 \subsection{Main flux and recirculation}
 
@@ -121,7 +121,7 @@ The adjacency matrix is
 \end{equation}
 where the numbers outside the border of the matrix indicate the indices of vertices. The element $G_{ji}$ on the $j$-th row and the $i$-th column is 1 if there exists a directed edge from vertex $j$ to vertex $i$ and 0 otherwise.
 
-Figures~\ref{fig:recirculation_}, \ref{fig:recirculation_species} and \ref{fig:recirculation_nodes} display the evolution of the substances in the network. As we can inspect, the concentration in node 2 is relatively higher than nodes 3, 4, 5 due to the recirculation and the direct downstream stream flow from node 1.
+Figures~\ref{fig:recirculation_}, \ref{fig:recirculation_species} and \ref{fig:recirculation_nodes} display the evolution of the substances in the network. As we can see, the fuel flows from node 1 to other nodes. The oxygen diffuses to the entire network except node 1. The reaction of methane combustion gradually take place in nodes 2, 3, 4, and 5.
 
 \begin{figure}[htbp]
     \centering
@@ -235,7 +235,7 @@ auto,
 \label{fig:by-pass}
 \end{figure}
 
-The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared with the network of recirculation, the concentration in node 2 is lower in the network with by-pass as there is one more edge originating from node 2 and no flow going back to it. The amount of substances of nodes 3 in the network of by-pass is slightly higher than its counterpart in the network of recirculation.
+The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared with the network of recirculation, the oxygen in node 2 spreads to other nodes more quickly as there is an additional edge originating from node 2 and no flow traveling back to it. Less substances react in node 2.
 
 \begin{figure}[htbp]
     \centering
