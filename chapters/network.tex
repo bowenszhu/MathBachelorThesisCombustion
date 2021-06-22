@@ -39,6 +39,10 @@ with prescribed initial conditions
 
 The aim is to solve the large-scale ODE system with sufficient accuracy for a certain time range. The differential equations are stiff as it involves fast chemistry and slow transport, for which we will apply implicit time integration methods with variable time steps.
 
+\section{Implicit time-integration method}
+
+Choosing a good solver is required to getting top speed. Figure~\ref{fig:two-step-CO} on page~\pageref{fig:two-step-CO} from the results of the two-step reaction mechanism of methane combustion reveals the stiff nature of the CRN problem. Explicit methods generally demand impractically small time steps $\Delta t$ to keep the error bounded. We thus apply implicit time-integration methods which takes less computational time to achieve given accuracy with larger time steps, even taking into account that extra computations are needed at each time step. The documentation of DifferentialEquations.jl recommends Rosenbrock methods for smaller problems and ESDIRK methods for slightly larger problems which are tested and evaluated below.
+
 \section{5-node-5-edge networks} \label{sec:5network}
 
 In this section, we apply Julia to solve networks consisting of 5 nodes and 5 edges in two different connectivity configurations. The code can be found in appendix~\ref{app:5network} on page~\pageref{app:5network}. Each vertex in the graph is a node with the one-step reaction mechanism~\eqref{re:one-step} of methane combustion as its internal chemistry. The ODE system is defined as follows, $\forall i \in \{1,2,3,4,5\}$,
@@ -235,7 +239,7 @@ auto,
 \label{fig:by-pass}
 \end{figure}
 
-The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared with the network of recirculation, the oxygen in node 2 spreads to other nodes more quickly as there is an additional edge originating from node 2 and no flow traveling back to it. Less substances react in node 2.
+The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared with the network of recirculation, the oxygen in node 2 gets consumed and spreads to other nodes more quickly as there is an additional edge originating from node 2 and no flow traveling back to it. The concentration of \ce{CO2} and \ce{H2O} are higher in node 2 in the network with recirculation than the that with by-pass. As a whole, less substances react in node 2. 
 
 \begin{figure}[htbp]
     \centering
@@ -305,6 +309,22 @@ The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_spec
     \end{subfigure}
     \caption{Nodes in 5-node 5-edge network with main flux and by-pass}\label{fig:by-pass_nodes}
 \end{figure}
+
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{subfigure}[b]{0.48\textwidth}
+%         \includesvg[width=\textwidth]{images/recirculation/recirculation2}
+%         \caption{Recirculation}
+%         \label{fig:recirculation1_duplicated}
+%     \end{subfigure}
+%     ~
+%     \begin{subfigure}[b]{0.48\textwidth}
+%         \includesvg[width=\textwidth]{images/by-pass/by-pass2}
+%         \caption{By-pass}
+%         \label{fig:by-pass2_duplicated}
+%     \end{subfigure}
+%     \caption{Nodes 2 in the 5-node 5-edge networks}\label{fig:5node2}
+% \end{figure}
 
 \clearpage
 

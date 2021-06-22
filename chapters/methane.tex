@@ -96,4 +96,11 @@ The same parameters in table~\ref{tab:CO_k} on page~\pageref{tab:CO_k} are appli
     \caption{Two-step mechanism of methane combustion}\label{fig:two-step}
 \end{figure}
 
-The results in figure~\ref{fig:two-step} look the same for both implementations except the small fluctuation in Python's figure~\ref{fig:two-step-python} due to the numerical methods it adopted. Note that while we are investigating pollutant formation, it is not particularly obvious from the figure that the carbon monoxide (\ce{CO}) is produced. Actually the curve corresponding to \ce{CO} is just slightly above the zero line and its numerical approximation at the end time $t = 10^{-7}$ is around $10^{-4}$ mol/L.
+The results in figure~\ref{fig:two-step} look the same for both implementations except the small fluctuation in Python's figure~\ref{fig:two-step-python} due to the numerical methods it adopted. Note that while we are investigating pollutant formation, it is not particularly obvious from the figure that the carbon monoxide (\ce{CO}) is produced. Figure~\ref{fig:two-step-CO} is a separate graph for \ce{CO}. The concentration of \ce{CO} jumps sharply away from 0 immediately after the reaction starts.
+
+\begin{figure}[ht!]
+    \centering
+    \includesvg[width=0.8\textwidth]{images/two_step_mechanism_methane_CO}
+    \caption{Carbon monoxide in two-step mechanism of methane combustion}
+    \label{fig:two-step-CO}
+\end{figure}

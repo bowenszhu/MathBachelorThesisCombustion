@@ -39,3 +39,9 @@ plot(sol, linewidth = 2, xlims = (0., 1.04e-7),
      xlabel="time [s]", 
      ylabel="concentration [mol/L]")
 savefig("res/two_step_mechanism_methane.svg")
+
+plot(sol, linewidth = 2, xlims = (0., 1.04e-7), vars = (0, 3),
+     title="CO in two-step mechanism of methane combustion", 
+     xlabel="time [s]", 
+     ylabel="concentration [mol/L]")
+savefig("res/two_step_mechanism_methane_CO.svg")
