@@ -6,7 +6,7 @@ This chapter presents solving reaction networks with Julia. It starts from the f
 
 As briefly introduced in section~\ref{sec:CRN}, an internal combustor space is modelled as a network of graph $G$ with $n$ vertices $V$ and some edges $E$. A vertex $v$ is a container with chemical reactions perfectly stirred which only involve chemistry. An edge $e$ is a pipe serving as a channel for flowing species with prescribed velocity which captures transport.
 
-Each vertex $v_i$ contains $s$ chemical species. Edge $e_{i,j}$ connects vertex $v_i$ and vertex $v_j$. $\mathbf u(t)$ is a vector of unknown species concentration.
+Each vertex $v_i$ contains $s$ chemical species. Directed edge $e_{i,j}$ connects vertex $v_i$ and vertex $v_j$. $\mathbf u(t)$ is a vector of unknown species concentration.
 
 \begin{align}
     \mathbf u(t) &= 
@@ -239,7 +239,7 @@ auto,
 \label{fig:by-pass}
 \end{figure}
 
-The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared with the network of recirculation, the oxygen in node 2 gets consumed and spreads to other nodes more quickly as there is an additional edge originating from node 2 and no flow traveling back to it. The concentration of \ce{CO2} and \ce{H2O} are higher in node 2 in the network with recirculation than the that with by-pass. As a whole, less substances react in node 2. 
+The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_species} and \ref{fig:by-pass_nodes}. Compared to the network with recirculation, the oxygen in node 2 gets consumed and spreads to other nodes more quickly as there is an additional edge originating from node 2 and no flow traveling back to it. The concentration of \ce{CO2} and \ce{H2O} are higher in node 2 in the network with recirculation than the that with by-pass. As a whole, less substances react in node 2. 
 
 \begin{figure}[htbp]
     \centering
@@ -351,7 +351,7 @@ The results are illustrated in figures~\ref{fig:by-pass_}, \ref{fig:by-pass_spec
     }
 }
 
-Solving stiff ordinary differential equations generally requires very small step size for numerical stability. It is crucial to improve performance and avoid inefficiency when dealing with large problems. According to the Julia package DifferentialEquations.jl, Jacobian is built at each iteration when implicit differential equation solver is used which is computationally expensive. The efficiency can be optimized by manually declaring  of Jacobian functions to reduce the Jacobian construction cost. In this way, we provide extra information about the ODE system to the solver. On the other hand, one can exploit the sparsity pattern of Jacobian. For example, the sparsity structure of the Jacobian for the 5-node-5-edge network with main flux and recirculation is
+Solving stiff ordinary differential equations generally requires very small step size for numerical stability. It is crucial to improve performance and avoid inefficiency when dealing with large problems. According to the Julia package DifferentialEquations.jl, Jacobian is built at each iteration when implicit differential equation solver is used which is computationally expensive. The efficiency can be optimized by declaring Jacobian functions to reduce the Jacobian construction cost. In this way, we provide extra information about the ODE system to the solver. On the other hand, one can exploit the sparsity pattern of Jacobian. For example, the sparsity structure of the Jacobian for the 5-node-5-edge network with main flux and recirculation is
 % \begin{equation}
 % \scalebox{0.76}{
 %     \bordermatrix{
@@ -410,11 +410,11 @@ For large networks, most of the entries in the Jacobian are zero. Therefore, spe
 
 \section{Performance}
 
-We solved the one- and the two-step reaction mechanism of methane combustion with the default solver algorithm\footnote{Julia DifferentialEquations.jl automatically chooses an efficient method for the input problem.} and applied the 5th order A-stable stiffly stable Rosenbrock method \texttt{Rodas5} to solve the 5-node-5-edge networks. So far only small (<50 ODEs) problems are examined. However, in order to utilize Julia on real combustion simulation, we shall test its capability on solving large reaction networks with more species beforehand.
+We solved the one- and the two-step reaction mechanism of methane combustion with the default solver algorithm\footnote{Julia DifferentialEquations.jl automatically chooses an efficient method for the input problem if no solver is selected by user.} and applied the 5th order A-stable stiffly stable Rosenbrock method \texttt{Rodas5} to solve the 5-node-5-edge networks. So far only small (<50 ODEs) problems are examined. However, in order to utilize Julia on real combustion simulation, we shall test its capability on solving large reaction networks with more species beforehand.
 
 Besides \texttt{Rodas5}, we consider the second order A-B-L-S-stable one-step ESDIRK method \texttt{TRBDF2} which is suggested by DifferentialEquations.jl documentation for slightly larger problems (with <2000 ODEs). Furthermore, it is possible to optimize the linear solvers for certain differential equation integration methods. We also evaluate the performance of \texttt{TRBDF2} in combination with the GMRES linear solver.
 
-For simplicity, we employ the test network shown in figure~\ref{fig:test-network}. All nodes reside in the same line with a directed edge connecting every pair of consecutive nodes. The internal chemistry in each node is the one-step mechanism of methane combustion. The initial values are gradually decreasing from node 1 to node n, although this does not really affect the execution time. The parameters are kept the same as the 5-node-5-edge networks discussed in section~\ref{sec:5network}.
+For simplicity, we employ the test network shown in figure~\ref{fig:test-network}. All nodes reside in the same line with a directed edge connecting every pair of consecutive nodes. The internal chemistry in each node is the one-step mechanism of methane combustion. The initial values are gradually decreasing from node 1 to node n. The parameters are kept the same as the 5-node-5-edge networks discussed in section~\ref{sec:5network}.
 
 \begin{figure}[htbp]
     \centering

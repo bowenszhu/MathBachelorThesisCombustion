@@ -7,11 +7,12 @@ A = 1.1e10         # pre-exponential factor
 R = 8.3145         # gas constant 
 T = 1e3            # temperature in Kelvin
 k = A * T^β * exp(-E / R / T) # rate coefficient
+σ = 5e8            # constant for edges
 n_CH₄ = 1.         # reaction order CH₄
 n_O₂  = 0.5        # reaction order O₂
 
-config = "recirculation"
-# config = "by-pass"
+n_node    = 5
+n_species = 4
 
 # adjacency matrix
 G = [0. 1. 0. 0. 0.  # main flux and recirculation
@@ -19,11 +20,13 @@ G = [0. 1. 0. 0. 0.  # main flux and recirculation
      0. 0. 0. 1. 1.
      0. 0. 0. 0. 0.
      0. 1. 0. 0. 0.]
+config = "recirculation"
 # G = [0. 1. 0. 0. 0.  # main flux and by-pass
 #      0. 0. 1. 0. 1.
 #      0. 0. 0. 1. 0.
 #      0. 0. 0. 0. 0.
 #      0. 0. 1. 0. 0.]
+# config = "by-pass"
 
 g_weighted = SimpleWeightedDiGraph(G - G')
 edge_weights = getfield.(collect(edges(g_weighted)), :weight)
@@ -49,14 +52,14 @@ end
 
 @inline Base.@propagate_inbounds function transport!(e, u_s, u_d, p, t)
     e .= 0.
-    if p > 0.
-        for i in 1:4
+    if p > 0.     # forward  direction of directed edge
+        for i in 1:n_species
             if u_s[i] > u_d[i]
                 e[i] = p * (u_s[i] - u_d[i])
             end
         end
-    elseif p < 0.
-        for i in 1:4
+    elseif p < 0. # backward direction of directed edge
+        for i in 1:n_species
             if u_d[i] > u_s[i]
                 e[i] = p * (u_d[i] - u_s[i])
             end
@@ -65,17 +68,19 @@ end
     nothing
 end
 
-node = ODEVertex(f! = chemistry!, dim = 4, sym=[:CH₄, :_O₂, :CO₂, :H₂O])
-edge = StaticEdge(f! = transport!, dim = 4, coupling = :directed)
+node = ODEVertex(f! = chemistry!, dim = n_species, 
+                 sym=[:CH₄, :_O₂, :CO₂, :H₂O])
+edge = StaticEdge(f! = transport!, dim = n_species, 
+                  coupling = :directed)
 network! = network_dynamics(node, edge, g_directed)
 
-p = (nothing, 5e8 * edge_weights)
-u₀ = zeros(4 * 5)
-u₀[1] = 1.        # initial value CH₄ in node 1
-u₀[4*2-2] = 1.    # initial value O₂  in node 2
-u₀[4*4-2] = 1.    # initial value O₂  in node 4
-tspan = (0.,      # start time t₀
-         2e-8)    # end time tₙ
+p = (nothing, σ * edge_weights)
+u₀ = zeros(n_species * n_node)
+u₀[1] = 1.            # initial value CH₄ in node 1
+u₀[2n_species-2] = 1. # initial value O₂  in node 2
+u₀[4n_species-2] = 1. # initial value O₂  in node 4
+tspan = (0.,          # start time t₀
+         2e-8)        # end time tₙ
 prob = ODEProblem(network!, u₀, tspan, p)
 sol = solve(prob, Rodas5(autodiff=false))
 

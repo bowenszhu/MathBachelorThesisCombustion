@@ -6,8 +6,8 @@ E₂ = 1.2e4
 β₂ = 0.8
 A₁ = 4.9e9         # pre-exponential factor
 A₂ = 2e8
-R = 8.3145         # gas constant 
-T = 1e3            # temperature in Kelvin
+R  = 8.3145        # gas constant 
+T  = 1e3           # temperature in Kelvin
 
 @variables t CH₄(t) O₂(t) CO(t) CO₂(t) H₂O(t) r₁(t) r₂(t)
 @parameters k₁, k₂, n_CH₄, n_CO, n_O₂_₁, n_O₂_₂
