@@ -41,7 +41,7 @@ The aim is to solve the large-scale ODE system with sufficient accuracy for a ce
 
 \section{Implicit time-integration method}
 
-Choosing a good solver is required to getting top speed. Figure~\ref{fig:two-step-CO} on page~\pageref{fig:two-step-CO} from the results of the two-step reaction mechanism of methane combustion reveals the stiff nature of the CRN problem. Explicit methods generally demand impractically small time steps $\Delta t$ to keep the error bounded. We thus apply implicit time-integration methods which takes less computational time to achieve given accuracy with larger time steps, even taking into account that extra computations are needed at each time step. The documentation of DifferentialEquations.jl recommends Rosenbrock methods for smaller problems and ESDIRK methods for slightly larger problems which are tested and evaluated below.
+Choosing a good solver is required to getting top speed. Figure~\ref{fig:two-step-CO} on page~\pageref{fig:two-step-CO} from the results of the two-step reaction mechanism of methane combustion reveals the stiff nature of the CRN problem. Explicit methods generally demand impractically small time steps $\Delta t$ to keep the error bounded. We thus apply implicit time-integration methods which take less computational time to achieve given accuracy with larger time steps, even taking into account that extra computations are needed at each time step. The documentation of DifferentialEquations.jl recommends Rosenbrock methods for smaller problems and ESDIRK methods for slightly larger problems which are tested and evaluated below.
 
 \section{5-node-5-edge networks} \label{sec:5network}
 
