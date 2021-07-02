@@ -1,6 +1,6 @@
 \chapter{Julia programming language} \label{ch:julia}
 
-Julia is a high-level, high-performance, dynamic programming language designed by \textcite{julia}. Many of its features are well suited for numerical and scientific computing. It is claimed that Julia can achieve machine performance without sacrificing human convenience, namely the so-called \texttt{Walks like Python, Runs like C}. The recent development of many Julia packages including various mathematical libraries, data manipulation tools and packages for general purpose computing enrich the Julia ecosystem for community use. In this project, we would like to apply Julia to model pollutant formation using the chemical reaction network approach. The following sections introduce the main relevant packages and how they contribute to our project.
+Julia is a high-level, high-performance, dynamic programming language designed by \textcite{julia}. Many of its features are well suited for numerical and scientific computing. It is claimed that Julia can achieve machine performance without sacrificing human convenience, namely the so-called \texttt{Walks like Python, Runs like C}. The recent development of many Julia packages including various mathematical libraries, data manipulation tools and packages for general purpose computing enrich the Julia ecosystem for community use. In this project, we would like to apply Julia to model pollutant formation using the chemical reactor network approach. The following sections introduce the main relevant packages and how they contribute to our project.
 
 \section{DifferentialEquations.jl}
 
@@ -12,7 +12,7 @@ ModelingToolkit.jl \parencite{ModelingToolkit.jl} is a modeling language for hig
 
 \section{LightGraphs.jl and SimpleWeightedGraphs.jl}
 
-To simulate the reaction network, special tools and data structures are needed to store and process graphs. LightGraphs.jl and SimpleWeightedGraphs.jl \parencite{LightGraphs} offer a set of simple and graph implementations which make it easy for us to define arbitrary complex networks. Besides constructing directed, weighted networks by adjacency matrices, many built-in graph structures are available, such as the Barab\'{a}si–Albert model.
+To simulate the reactor network, special tools and data structures are needed to store and process graphs. LightGraphs.jl and SimpleWeightedGraphs.jl \parencite{LightGraphs} offer a set of simple and graph implementations which make it easy for us to define arbitrary complex networks. Besides constructing directed, weighted networks by adjacency matrices, many built-in graph structures are available, such as the Barab\'{a}si–Albert model.
 
 \section{NetworkDynamics.jl}
 

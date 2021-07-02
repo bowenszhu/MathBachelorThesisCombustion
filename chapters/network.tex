@@ -1,6 +1,6 @@
-\chapter{Chemical reaction network with Julia} \label{ch:network}
+\chapter{Chemical reactor network with Julia} \label{ch:network}
 
-This chapter presents solving reaction networks with Julia. It starts from the formal mathematical model. Application on 5-node 5-edge networks is illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
+This chapter presents solving reactor networks with Julia. It starts from the formal mathematical model. Application on 5-node 5-edge networks is illustrated. At the end, the performance of solving large networks with various solver algorithms are evaluated and compared. 
 
 \section{Mathematical model}
 
@@ -410,7 +410,7 @@ For large networks, most of the entries in the Jacobian are zero. Therefore, spe
 
 \section{Performance}
 
-We solved the one- and the two-step reaction mechanism of methane combustion with the default solver algorithm\footnote{Julia DifferentialEquations.jl automatically chooses an efficient method for the input problem if no solver is selected by user.} and applied the 5th order A-stable stiffly stable Rosenbrock method \texttt{Rodas5} to solve the 5-node-5-edge networks. So far only small (<50 ODEs) problems are examined. However, in order to utilize Julia on real combustion simulation, we shall test its capability on solving large reaction networks with more species beforehand.
+We solved the one- and the two-step reaction mechanism of methane combustion with the default solver algorithm\footnote{Julia DifferentialEquations.jl automatically chooses an efficient method for the input problem if no solver is selected by user.} and applied the 5th order A-stable stiffly stable Rosenbrock method \texttt{Rodas5} to solve the 5-node-5-edge networks. So far only small (<50 ODEs) problems are examined. However, in order to utilize Julia on real combustion simulation, we shall test its capability on solving large reactor networks with more species beforehand.
 
 Besides \texttt{Rodas5}, we consider the second order A-B-L-S-stable one-step ESDIRK method \texttt{TRBDF2} which is suggested by DifferentialEquations.jl documentation for slightly larger problems (with <2000 ODEs). Furthermore, it is possible to optimize the linear solvers for certain differential equation integration methods. We also evaluate the performance of \texttt{TRBDF2} in combination with the GMRES linear solver.
 
@@ -585,5 +585,5 @@ auto,
         \caption{Memory allocation}
         \label{fig:performance-memory}
     \end{subfigure}
-    \caption{Performance of Julia for solving reaction networks}\label{fig:performance}
+    \caption{Performance of Julia for solving reactor networks}\label{fig:performance}
 \end{figure}
